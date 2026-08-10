@@ -1,0 +1,332 @@
+[
+  {
+    "id": "tool-1",
+    "name": "xiaojiemo457 代码仓库",
+    "description": "把代码和学习笔记寄存在云端，免得灵感被本地文件夹绑架。",
+    "url": "https://github.com/xiaojiemo457-commits/-",
+    "category": "工具",
+    "icon": "💻",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:00.000Z"
+  },
+  {
+    "id": "tool-2",
+    "name": "Emoji 大全",
+    "description": "负责给严肃文字塞进一点表情，让句号不再像辞职信。",
+    "url": "https://emoji6.com/emojiall/",
+    "category": "工具",
+    "icon": "😊",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:01.000Z"
+  },
+  {
+    "id": "tool-3",
+    "name": "TinyWow",
+    "description": "PDF、图片、视频和 AI 小工具杂货铺，临时救火不用先办会员。",
+    "url": "https://tinywow.com/",
+    "category": "工具",
+    "icon": "🛠️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:02.000Z"
+  },
+  {
+    "id": "tool-4",
+    "name": "PDF Simpli",
+    "description": "在线编辑、转换和整理 PDF，专治文件一到手就开始摆烂。",
+    "url": "https://pdfsimpli.com/",
+    "category": "工具",
+    "icon": "📄",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:03.000Z"
+  },
+  {
+    "id": "tool-5",
+    "name": "Apeaksoft 水印去除器",
+    "description": "把图片上的水印请出去，尽量不惊动旁边无辜的像素。",
+    "url": "https://www.apeaksoft.com/zh-CN/watermark-remover/editor/",
+    "category": "工具",
+    "icon": "🧹",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:04.000Z"
+  },
+  {
+    "id": "tool-6",
+    "name": "iLoveIMG",
+    "description": "图片压缩、裁剪、转换一条龙，让超大图片学会收敛。",
+    "url": "https://www.iloveimg.com/zh-cn",
+    "category": "工具",
+    "icon": "🖼️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:05.000Z"
+  },
+  {
+    "id": "tool-7",
+    "name": "Google Stitch",
+    "description": "用 AI 把一句产品想法缝成界面草图，设计稿先跑起来再说。",
+    "url": "https://stitch.withgoogle.com/",
+    "category": "工具",
+    "icon": "🧵",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:06.000Z"
+  },
+  {
+    "id": "tool-8",
+    "name": "Convry Tools",
+    "description": "即用即走的在线工具箱，用完就散场，不和硬盘谈长期关系。",
+    "url": "https://www.convry.com/",
+    "category": "工具",
+    "icon": "🧰",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:07.000Z"
+  },
+  {
+    "id": "tool-9",
+    "name": "GreenVideo",
+    "description": "把各个平台的视频链接炼成本地文件，收藏欲终于有了运输队。",
+    "url": "https://greenvideo.cc/",
+    "category": "工具",
+    "icon": "🎬",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:08.000Z"
+  },
+  {
+    "id": "tool-10",
+    "name": "TokenNav",
+    "description": "在 AI API 中转站海洋里看模型和价格，先导航再避免钱包触礁。",
+    "url": "https://tokennav.cc/",
+    "category": "工具",
+    "icon": "🧭",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:09.000Z"
+  },
+  {
+    "id": "tool-11",
+    "name": "TwitterXZ",
+    "description": "把 X 上的视频和 GIF 捞回来，防止时间线翻过去就人间蒸发。",
+    "url": "https://twitterxz.com/",
+    "category": "工具",
+    "icon": "🐦",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:10.000Z"
+  },
+  {
+    "id": "tool-12",
+    "name": "Prompt123",
+    "description": "提示词自助餐，没灵感时先夹两句再和 AI 谈判。",
+    "url": "https://prompt123.cn/",
+    "category": "工具",
+    "icon": "💬",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:11.000Z"
+  },
+  {
+    "id": "tool-13",
+    "name": "哲风壁纸",
+    "description": "给桌面换一张 4K 情绪皮肤，工作没变但窗户先变好看。",
+    "url": "https://haowallpaper.com/",
+    "category": "工具",
+    "icon": "🖼️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:12.000Z"
+  },
+  {
+    "id": "tool-14",
+    "name": "061129 壁纸站",
+    "description": "另一座桌面风景补给站，专治壁纸看三天就审美疲劳。",
+    "url": "https://wallpaper.061129.xyz/desktop",
+    "category": "工具",
+    "icon": "🏞️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:13.000Z"
+  },
+  {
+    "id": "tool-15",
+    "name": "飞书资料库",
+    "description": "把散落文件集中关进云盘，至少丢东西时知道去哪一层找。",
+    "url": "https://gcn2yix6chga.feishu.cn/drive/home/",
+    "category": "工具",
+    "icon": "📁",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:14.000Z"
+  },
+  {
+    "id": "tool-16",
+    "name": "LINUX DO",
+    "description": "技术社区和信息集散地，进去找答案，出来顺便多十个问题。",
+    "url": "https://linux.do/",
+    "category": "发现",
+    "icon": "🐧",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:15.000Z"
+  },
+  {
+    "id": "tool-17",
+    "name": "X",
+    "description": "全球实时碎片广播站，新闻、观点和情绪一起高速刷新。",
+    "url": "https://x.com/home",
+    "category": "发现",
+    "icon": "🐦",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:16.000Z"
+  },
+  {
+    "id": "tool-18",
+    "name": "NodeLoc",
+    "description": "技术与主机社区，服务器还没买，配置焦虑先安排上。",
+    "url": "https://www.nodeloc.com/",
+    "category": "发现",
+    "icon": "🖥️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:17.000Z"
+  },
+  {
+    "id": "tool-19",
+    "name": "小鱼项目网",
+    "description": "实操项目和资源的情报池，副业还没起飞，收藏夹已经上市。",
+    "url": "https://www.xnbaoku.cn/",
+    "category": "发现",
+    "icon": "🐟",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:18.000Z"
+  },
+  {
+    "id": "tool-20",
+    "name": "吾爱破解",
+    "description": "软件安全与技术交流老站，围观高手如何把问题拆到只剩零件。",
+    "url": "https://www.52pojie.cn/",
+    "category": "发现",
+    "icon": "🔓",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:19.000Z"
+  },
+  {
+    "id": "tool-21",
+    "name": "996 忍者",
+    "description": "摸鱼技巧、倒计时和工资计算器齐活，工位坐着，精神先下班。",
+    "url": "https://996.ninja/",
+    "category": "摸鱼",
+    "icon": "🥷",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:20.000Z"
+  },
+  {
+    "id": "tool-22",
+    "name": "数字直觉",
+    "description": "用概率和心理小实验校准直觉，看看大脑今天又在哪儿自信发挥。",
+    "url": "https://numfeel.996.ninja/",
+    "category": "摸鱼",
+    "icon": "🔢",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:21.000Z"
+  },
+  {
+    "id": "tool-23",
+    "name": "V2EX",
+    "description": "分享与探索的社区，技术问题聊着聊着也能拐进生活现场。",
+    "url": "https://www.v2ex.com/",
+    "category": "摸鱼",
+    "icon": "💬",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:22.000Z"
+  },
+  {
+    "id": "tool-24",
+    "name": "摸鱼派",
+    "description": "聊天、帖子和小游戏一锅端，认真摸鱼也需要社区氛围。",
+    "url": "https://fishpi.cn/",
+    "category": "摸鱼",
+    "icon": "🎣",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:23.000Z"
+  },
+  {
+    "id": "tool-25",
+    "name": "2Libra",
+    "description": "讨论工作与生活平衡的社区，天平偶尔歪向摸鱼也算正常波动。",
+    "url": "https://2libra.com/",
+    "category": "摸鱼",
+    "icon": "⚖️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:24.000Z"
+  },
+  {
+    "id": "tool-26",
+    "name": "ZRF.ME 影视站",
+    "description": "影视搜索与聚合入口，片荒可以治，熬夜这个副作用暂不负责。",
+    "url": "https://ys.zrfme.com/login?redirect=%2F",
+    "category": "摸鱼",
+    "icon": "🎬",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:25.000Z"
+  },
+  {
+    "id": "tool-27",
+    "name": "247 看",
+    "description": "电影、电视剧、动漫和综艺入口，待办清单看见你打开它会沉默。",
+    "url": "https://247kan.com/",
+    "category": "摸鱼",
+    "icon": "📺",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:26.000Z"
+  },
+  {
+    "id": "tool-28",
+    "name": "网飞猫影视",
+    "description": "影视内容聚合入口，片荒可以治，陌生登录框请保持距离。",
+    "url": "https://www.ncat22.com/",
+    "category": "摸鱼",
+    "icon": "🐱",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:27.000Z"
+  },
+  {
+    "id": "tool-29",
+    "name": "不良林：节点转 Socks",
+    "description": "把不同协议节点翻译成本地 Socks，网络方言终于有了同声传译。",
+    "url": "https://www.bulianglin.com/archives/tosocks.html",
+    "category": "拓展",
+    "icon": "🔀",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:28.000Z"
+  },
+  {
+    "id": "tool-30",
+    "name": "GPTMail",
+    "description": "即开即用的临时邮箱，让验证码有住处，主邮箱少接几张传单。",
+    "url": "https://mail.chatgpt.org.uk/",
+    "category": "工作",
+    "icon": "📧",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:29.000Z"
+  },
+  {
+    "id": "tool-31",
+    "name": "身份大全",
+    "description": "生成各国测试身份和地址资料，给表单测试临时请一群演员。",
+    "url": "https://www.shenfendaquan.com/",
+    "category": "工作",
+    "icon": "🪪",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:30.000Z"
+  },
+  {
+    "id": "tool-32",
+    "name": "Wordium",
+    "description": "文案大全网站",
+    "url": "https://lior.cc.cd/",
+    "category": "自研",
+    "icon": "✍️",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:31.000Z"
+  },
+  {
+    "id": "tool-33",
+    "name": "LuminaLab",
+    "description": "批量主题生图、图片添加水印等工具站",
+    "url": "https://lumina-lab-peach.vercel.app/",
+    "category": "自研",
+    "icon": "✨",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:32.000Z"
+  }
+]

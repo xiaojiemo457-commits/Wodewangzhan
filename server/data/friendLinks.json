@@ -1,0 +1,15 @@
+{
+  "adminLinks": [],
+  "visitorLinks": [
+    {
+      "id": "link-1785312826192-wv7a",
+      "name": "新访客站点",
+      "url": "https://newvisitor.com",
+      "description": "暂无描述",
+      "createdAt": 1785312826192,
+      "color": "from-indigo-500 to-violet-500",
+      "isAdminCreated": false,
+      "status": "approved"
+    }
+  ]
+}
