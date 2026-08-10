@@ -54,3 +54,27 @@ body {
   to { opacity: 1; }
 }
 .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+
+/* 唱片旋转动画（音乐页封面） */
+@keyframes vinylSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.vinyl-spinning {
+  animation: vinylSpin 12s linear infinite;
+}
+.vinyl-paused {
+  animation-play-state: paused;
+}
+
+/* 背景色平滑过渡 */
+.bg-color-transition {
+  transition: background 1.2s ease;
+}
+
+/* 日记展开淡入 */
+@keyframes diaryFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.diary-fade { animation: diaryFade 0.4s ease forwards; }

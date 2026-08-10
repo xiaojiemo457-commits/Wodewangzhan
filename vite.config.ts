@@ -59,32 +59,69 @@ export default defineConfig({
           try { parsed = new URL(fixed); } catch { res.statusCode = 400; res.end('Invalid URL'); return; }
           if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') { res.statusCode = 403; res.end('Bad protocol'); return; }
 
-          const response = await fetch(parsed.toString(), {
-            headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': '*/*', 'Accept-Encoding': 'identity' },
-            cache: 'no-store', redirect: 'follow',
-          });
-          if (!response.ok && response.status !== 206) { res.statusCode = response.status; res.end('Fetch failed'); return; }
+          // 转发 Range 请求头，支持音频/视频拖动进度条
+          const upstreamHeaders: Record<string, string> = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': '*/*',
+            'Accept-Encoding': 'identity',
+            'Referer': parsed.origin + '/',
+          };
+          const range = req.headers.range;
+          if (range) upstreamHeaders['Range'] = range;
+
+          let response: Response;
+          try {
+            response = await fetch(parsed.toString(), {
+              headers: upstreamHeaders,
+              cache: 'no-store',
+              redirect: 'follow',
+            });
+          } catch (e: any) {
+            if (!res.headersSent) { res.statusCode = 502; res.end('Upstream fetch failed'); }
+            return;
+          }
+          if (!response.ok && response.status !== 206) {
+            res.statusCode = response.status;
+            res.end('Fetch failed');
+            return;
+          }
 
           const ct = response.headers.get('content-type') || 'application/octet-stream';
           res.setHeader('Content-Type', ct);
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Headers', '*');
           res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+          res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
           res.setHeader('Accept-Ranges', 'bytes');
+
+          // 转发 Range 相关响应头
+          const contentRange = response.headers.get('content-range');
+          if (contentRange) res.setHeader('Content-Range', contentRange);
+          const contentLength = response.headers.get('content-length');
+          if (contentLength) res.setHeader('Content-Length', contentLength);
+
           if (ct.includes('image')) res.setHeader('Cache-Control', 'public, max-age=31536000');
           else if (ct.includes('audio')) res.setHeader('Cache-Control', 'public, max-age=3600');
           else res.setHeader('Cache-Control', 'no-store');
 
           res.statusCode = response.status;
+
+          // 处理 OPTIONS 预检
+          if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+          // HEAD 请求只返回头
+          if (req.method === 'HEAD') { res.end(); return; }
+
           if (response.body) {
             const reader = response.body.getReader();
+            let aborted = false;
+            req.on('close', () => { aborted = true; try { reader.cancel(); } catch {} });
             try {
-              while (true) {
+              while (!aborted) {
                 const { done, value } = await reader.read();
                 if (done) break;
                 res.write(Buffer.from(value));
               }
-              res.end();
+              if (!aborted) res.end();
             } catch { if (!res.headersSent) { res.statusCode = 500; res.end('Stream error'); } }
           } else { res.end(); }
         }

@@ -328,5 +328,15 @@
     "icon": "✨",
     "clicks": 0,
     "created_at": "2026-08-07T12:00:32.000Z"
+  },
+  {
+    "id": "tool-34",
+    "name": "虫部落",
+    "description": "搜索导航与资源聚合老站，一个框搜遍全网，少切换一次标签页。",
+    "url": "https://www.chongbuluo.com/",
+    "category": "发现",
+    "icon": "🐛",
+    "clicks": 0,
+    "created_at": "2026-08-07T12:00:33.000Z"
   }
 ]

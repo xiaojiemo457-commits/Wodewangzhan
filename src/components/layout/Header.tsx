@@ -7,8 +7,9 @@ import { cn } from '@/lib/utils';
 const NAV_LINKS = [
   { to: '/', label: '首页' },
   { to: '/thoughts', label: '日记' },
+  { to: '/quotes', label: '语录' },
   { to: '/treasure', label: '宝典' },
-  { to: '/moments', label: '瞬间' },
+  { to: '/timeline', label: '时间轴' },
   { to: '/music', label: '音乐' },
   { to: '/about', label: '关于' },
 ];

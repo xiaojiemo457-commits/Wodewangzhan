@@ -3,8 +3,9 @@ import Layout from "@/components/layout/Layout";
 import Home from "@/pages/Home";
 import Thoughts from "@/pages/Thoughts";
 import ThoughtDetail from "@/pages/ThoughtDetail";
+import Quotes from "@/pages/Quotes";
 import Treasure from "@/pages/Treasure";
-import Moments from "@/pages/Moments";
+import Timeline from "@/pages/Timeline";
 import Music from "@/pages/Music";
 import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
@@ -41,8 +42,9 @@ export default function App() {
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/thoughts" element={<Layout><Thoughts /></Layout>} />
         <Route path="/thoughts/:id" element={<Layout><ThoughtDetail /></Layout>} />
+        <Route path="/quotes" element={<Layout><Quotes /></Layout>} />
         <Route path="/treasure" element={<Layout><Treasure /></Layout>} />
-        <Route path="/moments" element={<Layout><Moments /></Layout>} />
+        <Route path="/timeline" element={<Layout><Timeline /></Layout>} />
         <Route path="/music" element={<Layout><Music /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/admin/login" element={<AdminLogin />} />
