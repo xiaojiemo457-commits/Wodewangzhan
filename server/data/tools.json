@@ -174,7 +174,7 @@
     "name": "NodeLoc",
     "description": "技术与主机社区，服务器还没买，配置焦虑先安排上。",
     "url": "https://www.nodeloc.com/",
-    "category": "发现",
+    "category": "社区论坛",
     "icon": "🖥️",
     "clicks": 0,
     "created_at": "2026-08-07T12:00:17.000Z"
@@ -244,7 +244,7 @@
     "name": "2Libra",
     "description": "讨论工作与生活平衡的社区，天平偶尔歪向摸鱼也算正常波动。",
     "url": "https://2libra.com/",
-    "category": "摸鱼",
+    "category": "社区论坛",
     "icon": "⚖️",
     "clicks": 0,
     "created_at": "2026-08-07T12:00:24.000Z"
@@ -338,5 +338,225 @@
     "icon": "🐛",
     "clicks": 0,
     "created_at": "2026-08-07T12:00:33.000Z"
+  },
+  {
+    "id": "tool-1786593843080-k4t1ng",
+    "name": "lovimg.art",
+    "description": "AI 图片 Prompt 灵感站，浏览生成的图片找灵感、直接参考对应提示词，玩 AI 绘图的收藏备用。",
+    "url": "https://lovimg.art/",
+    "category": "AI 工具",
+    "icon": "🎨",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.080Z"
+  },
+  {
+    "id": "tool-1786593843148-xlpre2",
+    "name": "codex.dakeai.cc",
+    "description": "GPT 模型 API 聚合站，可使用 GPT 系列模型 API，免去逐家开通的麻烦。",
+    "url": "https://codex.dakeai.cc/",
+    "category": "AI 工具",
+    "icon": "🤖",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.148Z"
+  },
+  {
+    "id": "tool-1786593843182-flp3uz",
+    "name": "Qoder",
+    "description": "阿里 AI 编程工作台，新用户送 2200 积分，可用 Qwen3.7 与 GLM 5.1 模型。",
+    "url": "https://qoder.com.cn/",
+    "category": "AI 工具",
+    "icon": "💻",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.182Z"
+  },
+  {
+    "id": "tool-1786593843213-3y2z0a",
+    "name": "Accio Work",
+    "description": "AI 智能体助手，可模拟手动操作完成任务，首月送 500 积分、每天重置 20 积分。",
+    "url": "https://www.accio.com/work",
+    "category": "AI 工具",
+    "icon": "🛠️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.213Z"
+  },
+  {
+    "id": "tool-1786593843269-acov0o",
+    "name": "Downsize Image",
+    "description": "纯无广告图片压缩站，无需注册登录、无使用限制，压缩后画质几乎无损。",
+    "url": "https://downsizeimage.com",
+    "category": "效率工具",
+    "icon": "🖼️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.269Z"
+  },
+  {
+    "id": "tool-1786593843304-ycnrd4",
+    "name": "61库 · 装机软件库",
+    "description": "绿色软件聚合站，聚合软件下载、绿色版软件、办公/开发工具，一站式解决装机需求。",
+    "url": "https://www.61ku.com/software",
+    "category": "效率工具",
+    "icon": "📦",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.304Z"
+  },
+  {
+    "id": "tool-1786593843339-x580ne",
+    "name": "61库 · Adobe 全家桶",
+    "description": "Adobe 创意软件下载中心，绿色版本，设计相关需求可收藏。",
+    "url": "https://www.61ku.com/adobe",
+    "category": "效率工具",
+    "icon": "🎞️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.339Z"
+  },
+  {
+    "id": "tool-1786593843416-rm7j19",
+    "name": "盘鸭 Panya",
+    "description": "网盘资源搜索引擎，搜公开网盘分享的学习资料、软件、影视、电子书，免安装、多终端可用。",
+    "url": "https://www.panya.cc/",
+    "category": "资源导航",
+    "icon": "🔍",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.416Z"
+  },
+  {
+    "id": "tool-1786593843452-vz2nil",
+    "name": "专属电子书导航",
+    "description": "简洁纯净无广告，聚合全网优质电子书渠道：文学、人文历史、散文随笔、名著等。",
+    "url": "https://dicomp.net/book",
+    "category": "资源导航",
+    "icon": "📚",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.452Z"
+  },
+  {
+    "id": "tool-1786593843487-n7a2nl",
+    "name": "精选在线观影站",
+    "description": "虫友精选的在线观影工具合集：无广告、清晰流畅，保持可用性、持续更新。",
+    "url": "https://dicomp.net/favorites/zaixian",
+    "category": "资源导航",
+    "icon": "🎬",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.487Z"
+  },
+  {
+    "id": "tool-1786593843515-buvllf",
+    "name": "儿童优质纪录片合集",
+    "description": "虫友整理的儿童优质纪录片/动画电影（百度网盘 pwd:8888 / 夸克 pan.quark.cn/s/deb8c39af10b）：螺丝钉、微观历史秀、我的牛顿教练、哈利·波特系列等。",
+    "url": "https://pan.baidu.com/s/11cHIIuvf4IfZP6BXX4SeOw?pwd=8888",
+    "category": "资源导航",
+    "icon": "🧒",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.515Z"
+  },
+  {
+    "id": "tool-1786593843565-svr8w1",
+    "name": "Radio Garden",
+    "description": "世界电台地图，在世界地图上点一个绿点就能收听当地电台。",
+    "url": "http://radio.garden/",
+    "category": "趣味涨姿势",
+    "icon": "📻",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.565Z"
+  },
+  {
+    "id": "tool-1786593843601-1csimt",
+    "name": "物流艺术",
+    "description": "用视频记录一个快递从瑞典斯德哥尔摩历经 37 天到达深圳的全过程。",
+    "url": "https://logisticsartproject.com/",
+    "category": "趣味涨姿势",
+    "icon": "📦",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.601Z"
+  },
+  {
+    "id": "tool-1786593843634-4rfkd7",
+    "name": "网站设计博物馆",
+    "description": "展出 1600+ 网站在 1991-2006 年的主页设计，互联网考古现场。",
+    "url": "https://www.webdesignmuseum.org/",
+    "category": "趣味涨姿势",
+    "icon": "🏛️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.634Z"
+  },
+  {
+    "id": "tool-1786593843668-v8u9ej",
+    "name": "机械键盘博物馆",
+    "description": "收集了大量设计独特的机械键盘，键盘发烧友的天堂。",
+    "url": "https://scrapbox.io/MECHKEYS/",
+    "category": "趣味涨姿势",
+    "icon": "⌨️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.668Z"
+  },
+  {
+    "id": "tool-1786593843728-7b3ucl",
+    "name": "Where's Roadster",
+    "description": "实时追踪 2018 年射入太空的特斯拉 Roadster 位置与时速，及车里循环播放的 Space Oddity 次数。",
+    "url": "https://www.whereisroadster.com/",
+    "category": "趣味涨姿势",
+    "icon": "🚀",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.728Z"
+  },
+  {
+    "id": "tool-1786593843771-kls5zf",
+    "name": "超大陆延时",
+    "description": "过去 20 亿年地球各大洲与超大陆的交互式延时摄影。",
+    "url": "https://szupie.github.io/supercontinents/",
+    "category": "趣味涨姿势",
+    "icon": "🌍",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.771Z"
+  },
+  {
+    "id": "tool-1786593843801-y7r1js",
+    "name": "Logoly",
+    "description": "PornHub 风格 Logo 生成器（谐音梗），B 站封面常见元素，纯娱乐。",
+    "url": "https://logoly.pro/",
+    "category": "趣味涨姿势",
+    "icon": "🎭",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.801Z"
+  },
+  {
+    "id": "tool-1786593843837-rxbbts",
+    "name": "AirPano",
+    "description": "3D 超高清 360° 全景看世界名胜，足不出户环游地球。",
+    "url": "https://www.airpano.com/",
+    "category": "趣味涨姿势",
+    "icon": "🏔️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.837Z"
+  },
+  {
+    "id": "tool-1786593843866-9sr9bm",
+    "name": "Subtle Patterns",
+    "description": "高清细腻的网页背景图案素材库，设计必备。",
+    "url": "https://www.subtlepatterns.com/",
+    "category": "趣味涨姿势",
+    "icon": "🧩",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.866Z"
+  },
+  {
+    "id": "tool-1786593843900-utja3w",
+    "name": "虫部落隐藏菜单",
+    "description": "虫部落「小众网站」帖子内需回复解锁的隐藏小众网站清单，可持续挖掘的宝藏来源。",
+    "url": "https://www.chongbuluo.com/thread-24974-1-1.html",
+    "category": "趣味涨姿势",
+    "icon": "🗺️",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.900Z"
+  },
+  {
+    "id": "tool-1786593843937-1qgi0f",
+    "name": "虫部落快搜",
+    "description": "虫部落的搜索导航站，聚合优质搜索入口，可作「导航」类收藏。",
+    "url": "https://search.chongbuluo.com/",
+    "category": "趣味涨姿势",
+    "icon": "🧭",
+    "clicks": 0,
+    "created_at": "2026-08-13T04:04:03.937Z"
   }
 ]

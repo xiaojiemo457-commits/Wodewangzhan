@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Wrench, Image, Link as LinkIcon, Clock, Eye } from 'lucide-react';
+import { FileText, Wrench, Music, History, Link as LinkIcon, Clock, Eye } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 
 function StatCard({
@@ -33,23 +33,19 @@ function StatCard({
 }
 
 export default function AdminDashboard() {
-  const {
-    articles,
-    fetchArticles,
-    tools,
-    fetchTools,
-    photos,
-    fetchPhotos,
-    friendLinks,
-    fetchFriendLinks,
-  } = useStore();
+  const articles = useStore((s) => s.articles);
+  const tools = useStore((s) => s.tools);
+  const musicEntries = useStore((s) => s.musicEntries);
+  const timelineEvents = useStore((s) => s.timelineEvents);
+  const friendLinks = useStore((s) => s.friendLinks);
 
   useEffect(() => {
-    fetchArticles();
-    fetchTools();
-    fetchPhotos();
-    fetchFriendLinks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const s = useStore.getState();
+    s.fetchArticles();
+    s.fetchTools();
+    s.fetchMusic();
+    s.fetchTimeline();
+    s.fetchFriendLinks();
   }, []);
 
   const pendingLinks = friendLinks.filter((l) => l.status === 'pending');
@@ -60,35 +56,12 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="文章总数"
-          value={articles.length}
-          icon={FileText}
-          color="bg-indigo-600"
-          to="/admin/articles"
-        />
-        <StatCard
-          label="工具数"
-          value={tools.length}
-          icon={Wrench}
-          color="bg-emerald-600"
-          to="/admin/tools"
-        />
-        <StatCard
-          label="照片数"
-          value={photos.length}
-          icon={Image}
-          color="bg-pink-600"
-          to="/admin/photos"
-        />
-        <StatCard
-          label="友链数"
-          value={friendLinks.length}
-          icon={LinkIcon}
-          color="bg-amber-600"
-          to="/admin/friend-links"
-        />
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <StatCard label="文章" value={articles.length} icon={FileText} color="bg-indigo-600" to="/admin/articles" />
+        <StatCard label="工具" value={tools.length} icon={Wrench} color="bg-emerald-600" to="/admin/tools" />
+        <StatCard label="音乐" value={musicEntries.length} icon={Music} color="bg-pink-600" to="/admin/music" />
+        <StatCard label="时间轴" value={timelineEvents.length} icon={History} color="bg-amber-600" to="/admin/timeline" />
+        <StatCard label="友链" value={friendLinks.length} icon={LinkIcon} color="bg-cyan-600" to="/admin/friend-links" />
       </div>
 
       {/* Pending friend links alert */}

@@ -21,7 +21,7 @@ body {
 .prose h1 { font-size: 2rem; font-weight: 700; margin: 2rem 0 1rem; }
 .prose h2 { font-size: 1.5rem; font-weight: 700; margin: 1.75rem 0 0.875rem; }
 .prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
-.prose p { margin: 0.75rem 0; line-height: 1.85; }
+.prose p { margin: 1.25rem 0; line-height: 2; }
 .prose ul { margin: 0.75rem 0; padding-left: 1.5rem; list-style: disc; }
 .prose ol { margin: 0.75rem 0; padding-left: 1.5rem; list-style: decimal; }
 .prose li { margin: 0.375rem 0; line-height: 1.75; }

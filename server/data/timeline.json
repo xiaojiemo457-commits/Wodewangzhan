@@ -1,0 +1,32 @@
+[
+  {
+    "id": "timeline-1",
+    "age": 1,
+    "year": "2003",
+    "title": "出生",
+    "description": "2003年，我出生了，人生从此开始。",
+    "icon": "🌱",
+    "color": "#84fab0",
+    "sort_order": 1
+  },
+  {
+    "id": "timeline-2",
+    "age": 14,
+    "year": "2017",
+    "title": "考入大学",
+    "description": "2017年考入大学，开启四年的求学生涯。",
+    "icon": "🏫",
+    "color": "#a1c4fd",
+    "sort_order": 2
+  },
+  {
+    "id": "timeline-3",
+    "age": 18,
+    "year": "2021",
+    "title": "大学毕业",
+    "description": "2021年大学毕业，正式告别学生时代。",
+    "icon": "🎓",
+    "color": "#f093fb",
+    "sort_order": 3
+  }
+]

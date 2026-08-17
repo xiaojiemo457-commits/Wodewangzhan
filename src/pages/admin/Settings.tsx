@@ -1,35 +1,70 @@
-import { useState, FormEvent } from 'react';
-import { Sun, Moon, Monitor, Check, Save } from 'lucide-react';
+import { useState, FormEvent, useEffect } from 'react';
+import { Sun, Moon, Monitor, Check, Save, KeyRound, Lock } from 'lucide-react';
 import { useStore } from '@/store/useStore';
+import { api, changePassword } from '@/services/api';
 
 type ThemePref = 'light' | 'dark' | 'system';
 
 export default function AdminSettings() {
-  const { theme, setTheme, isDark } = useStore();
-  const [siteTitle, setSiteTitle] = useState('莫的个人网站');
-  const [siteDescription, setSiteDescription] = useState('记录生活、思考与技术');
+  const theme = useStore((s) => s.theme);
+  const isDark = useStore((s) => s.isDark);
+  const [siteTitle, setSiteTitle] = useState('');
+  const [siteDescription, setSiteDescription] = useState('');
+  const [siteFooter, setSiteFooter] = useState('');
+  const [siteKeywords, setSiteKeywords] = useState('');
+  const [icp, setIcp] = useState('');
   const [themePref, setThemePref] = useState<ThemePref>(
     (localStorage.getItem('theme_pref') as ThemePref) || 'light',
   );
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await api.getSettings();
+        setSiteTitle(data.siteTitle || '');
+        setSiteDescription(data.siteDescription || '');
+        setSiteFooter(data.siteFooter || '');
+        setSiteKeywords(data.siteKeywords || '');
+        setIcp(data.icp || '');
+      } catch (e) {
+        console.error('加载站点设置失败', e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   const handleThemeChange = (pref: ThemePref) => {
     setThemePref(pref);
     localStorage.setItem('theme_pref', pref);
     if (pref === 'light') {
-      setTheme('light');
+      useStore.getState().setTheme('light');
     } else if (pref === 'dark') {
-      setTheme('dark');
+      useStore.getState().setTheme('dark');
     } else {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
+      useStore.getState().setTheme(prefersDark ? 'dark' : 'light');
     }
   };
 
-  const handleSave = (e: FormEvent) => {
+  const handleSave = async (e: FormEvent) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await api.updateSettings({
+        siteTitle,
+        siteDescription,
+        siteFooter,
+        siteKeywords,
+        icp,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      console.error('保存失败', e);
+      alert('保存失败');
+    }
   };
 
   const themeOptions: { value: ThemePref; label: string; icon: typeof Sun }[] = [
@@ -57,6 +92,31 @@ export default function AdminSettings() {
               value={siteDescription}
               onChange={(e) => setSiteDescription(e.target.value)}
               rows={3}
+              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm text-gray-400">页脚文字</label>
+            <input
+              value={siteFooter}
+              onChange={(e) => setSiteFooter(e.target.value)}
+              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm text-gray-400">SEO 关键词（逗号分隔）</label>
+            <input
+              value={siteKeywords}
+              onChange={(e) => setSiteKeywords(e.target.value)}
+              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm text-gray-400">ICP 备案号</label>
+            <input
+              value={icp}
+              onChange={(e) => setIcp(e.target.value)}
+              placeholder="可选"
               className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
             />
           </div>
@@ -109,6 +169,108 @@ export default function AdminSettings() {
           </span>
         )}
       </div>
+
+      {/* 安全 - 修改密码 */}
+      <SecuritySection />
     </form>
+  );
+}
+
+function SecuritySection() {
+  const [currentPwd, setCurrentPwd] = useState('');
+  const [newPwd, setNewPwd] = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleChangePassword = async (e: FormEvent) => {
+    e.preventDefault();
+    setMsg(null);
+    if (!currentPwd || !newPwd) {
+      setMsg({ type: 'error', text: '请填写完整信息' });
+      return;
+    }
+    if (newPwd.length < 4) {
+      setMsg({ type: 'error', text: '新密码至少 4 位' });
+      return;
+    }
+    if (newPwd !== confirmPwd) {
+      setMsg({ type: 'error', text: '两次输入的新密码不一致' });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await changePassword(currentPwd, newPwd);
+      setMsg({ type: 'success', text: '密码修改成功' });
+      setCurrentPwd('');
+      setNewPwd('');
+      setConfirmPwd('');
+    } catch (err: any) {
+      const status = err?.message?.match(/(\d+)/)?.[1];
+      setMsg({ type: 'error', text: status === '401' ? '当前密码不正确' : '修改失败，请稍后再试' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="pt-4">
+      <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+        <KeyRound size={18} className="text-amber-400" />
+        安全设置
+      </h2>
+      <form onSubmit={handleChangePassword} className="space-y-4 rounded-xl border border-gray-800 bg-gray-800/50 p-5">
+        <div>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm text-gray-400">
+            <Lock size={14} />
+            当前密码
+          </label>
+          <input
+            type="password"
+            value={currentPwd}
+            onChange={(e) => setCurrentPwd(e.target.value)}
+            required
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm text-gray-400">新密码</label>
+            <input
+              type="password"
+              value={newPwd}
+              onChange={(e) => setNewPwd(e.target.value)}
+              required
+              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm text-gray-400">确认新密码</label>
+            <input
+              type="password"
+              value={confirmPwd}
+              onChange={(e) => setConfirmPwd(e.target.value)}
+              required
+              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-indigo-500"
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex items-center gap-1.5 rounded-lg bg-amber-600 px-5 py-2 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+          >
+            <KeyRound size={16} />
+            {submitting ? '提交中...' : '修改密码'}
+          </button>
+          {msg && (
+            <span className={`text-sm ${msg.type === 'success' ? 'text-emerald-400' : 'text-red-400'}`}>
+              {msg.text}
+            </span>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }

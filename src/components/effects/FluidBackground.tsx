@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react';
-
-interface FluidBackgroundProps {
-  isDark: boolean;
-}
+import { useStore } from '../../store/useStore';
 
 interface Blob {
   x: number;
@@ -43,16 +40,20 @@ function hexToRgb(hex: string) {
   };
 }
 
-export default function FluidBackground({ isDark }: FluidBackgroundProps) {
+export default function FluidBackground() {
+  const isDark = useStore((s) => s.isDark);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const blobsRef = useRef<Blob[]>([]);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const rafRef = useRef<number>(0);
   const isDarkRef = useRef(isDark);
+  // 供主题切换时重建色板
+  const reinitRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     isDarkRef.current = isDark;
+    reinitRef.current();
   }, [isDark]);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function FluidBackground({ isDark }: FluidBackgroundProps) {
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let running = false;
 
     const initBlobs = () => {
       const configs = isDarkRef.current ? DARK_BLOBS : LIGHT_BLOBS;
@@ -85,6 +87,7 @@ export default function FluidBackground({ isDark }: FluidBackgroundProps) {
         };
       });
     };
+    reinitRef.current = initBlobs;
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
@@ -166,26 +169,54 @@ export default function FluidBackground({ isDark }: FluidBackgroundProps) {
       rafRef.current = requestAnimationFrame(render);
     };
 
+    // 页面隐藏时暂停动画，节省 CPU/电量
+    const onVisibility = () => {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(rafRef.current);
+      } else if (!running) {
+        running = true;
+        rafRef.current = requestAnimationFrame(render);
+      }
+    };
+
+    // 尊重系统「减弱动态效果」：只渲染一帧静态画面
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     resize();
-    render();
+    if (prefersReduced) {
+      render();
+      cancelAnimationFrame(rafRef.current); // 只画一帧
+      running = false;
+    } else {
+      running = true;
+      render();
+    }
     window.addEventListener('resize', resize);
     container.addEventListener('mousemove', onMouseMove);
     container.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
+      running = false;
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', resize);
       container.removeEventListener('mousemove', onMouseMove);
       container.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="fixed inset-0 overflow-hidden -z-10" style={{
-      background: isDark
-        ? 'linear-gradient(180deg, #1a0b2e 0%, #0d47a1 30%, #006064 60%, #1a0b2e 100%)'
-        : 'linear-gradient(180deg, #fce4ec 0%, #fff3e0 30%, #fffde7 60%, #fce4ec 100%)',
-    }}>
+    <div
+      ref={containerRef}
+      className="fixed inset-0 overflow-hidden -z-10"
+      style={{
+        background: isDark
+          ? 'linear-gradient(180deg, #1a0b2e 0%, #0d47a1 30%, #006064 60%, #1a0b2e 100%)'
+          : 'linear-gradient(180deg, #fce4ec 0%, #fff3e0 30%, #fffde7 60%, #fce4ec 100%)',
+      }}
+    >
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none"

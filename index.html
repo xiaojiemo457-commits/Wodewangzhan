@@ -3,7 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>莫的个人空间</title>
+    <title>莫的个人空间 · 记录生活</title>
+    <meta name="description" content="莫的个人空间 - 记录生活、思考与技术。有日记、照片、音乐、语录，还有一路走来的时间轴。" />
+    <meta name="keywords" content="个人网站,博客,日记,生活,照片,音乐,语录,时间轴" />
+    <meta name="author" content="莫军杰" />
+    <meta name="theme-color" content="#fbbf24" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="莫的个人空间 · 记录生活" />
+    <meta property="og:description" content="记录生活、思考与技术。有日记、照片、音乐、语录，还有一路走来的时间轴。" />
+    <meta property="og:locale" content="zh_CN" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="莫的个人空间 · 记录生活" />
+    <meta name="twitter:description" content="记录生活、思考与技术。" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%B5%3C/text%3E%3C/svg%3E" />
+    <!-- 主题预初始化：避免刷新时深色模式闪烁 -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

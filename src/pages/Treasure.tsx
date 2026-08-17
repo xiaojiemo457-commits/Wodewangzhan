@@ -45,7 +45,7 @@ const setLastUsed = (id: string) => {
 const effectiveClicks = (tool: Tool) => (tool.clicks || 0) + getLocalClicks(tool.id);
 
 export default function Treasure() {
-  const { isDark, tools, fetchTools } = useStore();
+  const tools = useStore((s) => s.tools);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('default');
   const [category, setCategory] = useState('All');
@@ -54,7 +54,7 @@ export default function Treasure() {
   const [, setClickVersion] = useState(0);
 
   useEffect(() => {
-    fetchTools();
+    useStore.getState().fetchTools();
   }, []);
 
   const categories = useMemo(() => {
@@ -93,27 +93,22 @@ export default function Treasure() {
   ];
 
   return (
-    <div className={cn('min-h-screen pb-16 transition-colors', isDark ? 'bg-gray-950 text-gray-100' : 'bg-gray-50 text-gray-900')}>
+    <div className="min-h-screen pb-16 transition-colors bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">宝典</h1>
-          <p className={cn('text-sm', isDark ? 'text-gray-400' : 'text-gray-500')}>收藏实用工具，提升效率</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">收藏实用工具，提升效率</p>
         </div>
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className={cn('absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5', isDark ? 'text-gray-500' : 'text-gray-400')} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="搜索工具名称或描述..."
-            className={cn(
-              'w-full pl-12 pr-4 py-3 rounded-xl border outline-none transition-colors',
-              isDark
-                ? 'bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:border-sky-500'
-                : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-sky-500'
-            )}
+            className="w-full pl-12 pr-4 py-3 rounded-xl border outline-none transition-colors bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-sky-500 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-100 dark:placeholder-gray-500"
           />
         </div>
 
@@ -127,9 +122,7 @@ export default function Treasure() {
                 'px-4 py-1.5 rounded-full text-sm font-medium transition-colors',
                 sort === tab.key
                   ? 'bg-sky-500 text-white'
-                  : isDark
-                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
               )}
             >
               {tab.label}
@@ -147,9 +140,7 @@ export default function Treasure() {
                 'px-3 py-1 rounded-full text-xs font-medium transition-colors',
                 category === c
                   ? 'bg-indigo-500 text-white'
-                  : isDark
-                    ? 'bg-gray-800/60 text-gray-400 hover:text-gray-200'
-                    : 'bg-gray-100 text-gray-500 hover:text-gray-700'
+                  : 'bg-gray-100 text-gray-500 hover:text-gray-700 dark:bg-gray-800/60 dark:text-gray-400 dark:hover:text-gray-200'
               )}
             >
               {c === 'All' ? '全部' : c}
@@ -159,17 +150,14 @@ export default function Treasure() {
 
         {/* Grid */}
         {filtered.length === 0 ? (
-          <div className={cn('text-center py-20', isDark ? 'text-gray-500' : 'text-gray-400')}>暂无工具</div>
+          <div className="text-center py-20 text-gray-400 dark:text-gray-500">暂无工具</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filtered.map((tool) => (
               <div
                 key={tool.id}
                 onClick={() => setSelected(tool)}
-                className={cn(
-                  'group cursor-pointer rounded-2xl p-5 border transition-all hover:-translate-y-1 hover:shadow-lg',
-                  isDark ? 'bg-gray-900 border-gray-800 hover:border-gray-700' : 'bg-white border-gray-100 hover:border-gray-200'
-                )}
+                className="group cursor-pointer rounded-2xl p-5 border transition-all hover:-translate-y-1 hover:shadow-lg bg-white border-gray-100 hover:border-gray-200 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-gray-700"
               >
                 <div className="flex items-start gap-3 mb-3">
                   <div className={cn('w-12 h-12 rounded-xl flex items-center justify-center text-white text-lg font-bold shrink-0', getIconColor(tool.name))}>
@@ -177,12 +165,12 @@ export default function Treasure() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="font-semibold truncate">{tool.name}</h3>
-                    <span className={cn('inline-block mt-1 text-xs px-2 py-0.5 rounded-full', isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-500')}>
+                    <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
                       {tool.category}
                     </span>
                   </div>
                 </div>
-                <p className={cn('text-sm line-clamp-2 mb-4 min-h-[2.5rem]', isDark ? 'text-gray-400' : 'text-gray-500')}>
+                <p className="text-sm line-clamp-2 mb-4 min-h-[2.5rem] text-gray-500 dark:text-gray-400">
                   {tool.description}
                 </p>
                 <button

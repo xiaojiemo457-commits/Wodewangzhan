@@ -42,7 +42,7 @@ export default function ArticleEditor() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEdit = !!id;
-  const { categories, fetchArticles } = useStore();
+  const categories = useStore((s) => s.categories);
 
   const [title, setTitle] = useState('');
   const [categoryId, setCategoryId] = useState(categories[0]?.id ?? '');
@@ -166,7 +166,7 @@ export default function ArticleEditor() {
       } else {
         await createArticle(payload);
       }
-      await fetchArticles();
+      await useStore.getState().fetchArticles();
       navigate('/admin/articles');
     } catch {
       alert('保存失败，请重试');

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useStore } from '../../store/useStore';
 import { cn } from '../../lib/utils';
 
 interface TableOfContentsProps {
@@ -35,7 +34,6 @@ function parseHeadings(content: string): Heading[] {
 }
 
 export default function TableOfContents({ content }: TableOfContentsProps) {
-  const isDark = useStore((s) => s.isDark);
   const headings = useMemo(() => parseHeadings(content), [content]);
   const [activeId, setActiveId] = useState<string>('');
 
@@ -75,15 +73,10 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   return (
     <nav className="hidden lg:block">
       <div className="sticky top-24">
-        <h4
-          className={cn(
-            'mb-3 text-sm font-semibold',
-            isDark ? 'text-white/80' : 'text-gray-700'
-          )}
-        >
+        <h4 className="mb-3 text-sm font-semibold text-gray-700 dark:text-white/80">
           目录
         </h4>
-        <ul className={cn('space-y-0.5 border-l text-sm', isDark ? 'border-white/10' : 'border-black/10')}>
+        <ul className="space-y-0.5 border-l text-sm border-black/10 dark:border-white/10">
           {headings.map((h) => {
             const active = activeId === h.id;
             return (
@@ -95,12 +88,8 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                     'block w-full border-l-2 pl-3 pr-2 py-1 text-left transition-colors -ml-px',
                     h.level === 3 ? 'pl-6' : 'pl-3',
                     active
-                      ? isDark
-                        ? 'border-white font-medium text-white'
-                        : 'border-black font-medium text-black'
-                      : isDark
-                        ? 'border-transparent text-white/50 hover:text-white/80'
-                        : 'border-transparent text-gray-500 hover:text-gray-800'
+                      ? 'border-black font-medium text-black dark:border-white dark:text-white'
+                      : 'border-transparent text-gray-500 hover:text-gray-800 dark:text-white/50 dark:hover:text-white/80'
                   )}
                 >
                   {h.text}

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useStore } from '../../store/useStore';
 import { cn } from '../../lib/utils';
 
 export default function ReadingProgress() {
-  const isDark = useStore((s) => s.isDark);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -39,7 +37,7 @@ export default function ReadingProgress() {
       <div
         className={cn(
           'h-full transition-[width] duration-150 ease-out',
-          isDark ? 'bg-white' : 'bg-black'
+          'bg-black dark:bg-white'
         )}
         style={{ width: `${progress}%` }}
       />

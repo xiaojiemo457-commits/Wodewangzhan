@@ -49,3 +49,12 @@ Desktop.ini
 
 # Vite
 .vite
+
+# Sensitive data (never commit)
+server/data/auth.json
+
+# Project workspace data (memories, local state)
+.workbuddy/
+
+# Vitest temp config snapshots
+vitest.config.ts.timestamp-*.mjs

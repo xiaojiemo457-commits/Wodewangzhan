@@ -42,7 +42,6 @@ function extractText(node: ReactNode): string {
 export default function ThoughtDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isDark = useStore((s) => s.isDark);
   const categories = useStore((s) => s.categories);
   const articles = useStore((s) => s.articles);
   const fetchArticles = useStore((s) => s.fetchArticles);
@@ -105,9 +104,20 @@ export default function ThoughtDetail() {
       .slice(0, 3);
   }, [article, articles]);
 
+  // 预处理正文：把所有换行统一为双换行（Markdown 段落分隔），
+  // 避免单换行被渲染成同一段导致文字密密麻麻挤在一起
+  const formattedContent = useMemo(() => {
+    if (!article?.content) return '';
+    return article.content
+      .split('\n')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+      .join('\n\n');
+  }, [article?.content]);
+
   if (loading) {
     return (
-      <div className={cn('flex min-h-[60vh] items-center justify-center text-sm', isDark ? 'text-white/40' : 'text-gray-400')}>
+      <div className="flex min-h-[60vh] items-center justify-center text-sm text-gray-400 dark:text-white/40">
         加载中…
       </div>
     );
@@ -116,15 +126,12 @@ export default function ThoughtDetail() {
   if (notFound || !article) {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-6 text-center">
-        <h1 className={cn('mb-3 text-5xl font-bold', isDark ? 'text-white' : 'text-gray-900')}>404</h1>
-        <p className={cn('mb-6 text-sm', isDark ? 'text-white/50' : 'text-gray-500')}>文章未找到</p>
+        <h1 className="mb-3 text-5xl font-bold text-gray-900 dark:text-white">404</h1>
+        <p className="mb-6 text-sm text-gray-500 dark:text-white/50">文章未找到</p>
         <button
           type="button"
           onClick={() => navigate('/thoughts')}
-          className={cn(
-            'inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors',
-            isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'
-          )}
+          className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
         >
           <ArrowLeft size={16} />
           返回日记
@@ -134,7 +141,7 @@ export default function ThoughtDetail() {
   }
 
   return (
-    <div className={cn(isDark ? 'text-white' : 'text-gray-900')}>
+    <div className="text-gray-900 dark:text-white">
       <ReadingProgress />
 
       {/* Back button */}
@@ -142,10 +149,7 @@ export default function ThoughtDetail() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className={cn(
-            'inline-flex items-center gap-1.5 text-sm transition-colors',
-            isDark ? 'text-white/60 hover:text-white' : 'text-gray-500 hover:text-gray-900'
-          )}
+          className="inline-flex items-center gap-1.5 text-sm transition-colors text-gray-500 hover:text-gray-900 dark:text-white/60 dark:hover:text-white"
         >
           <ArrowLeft size={16} />
           返回日记
@@ -161,12 +165,7 @@ export default function ThoughtDetail() {
             className="h-full max-h-[400px] w-full object-cover"
           />
         ) : (
-          <div
-            className={cn(
-              'h-[300px] w-full sm:h-[400px]',
-              isDark ? 'bg-gradient-to-br from-white/10 to-white/[0.02]' : 'bg-gradient-to-br from-black/10 to-black/[0.02]'
-            )}
-          />
+          <div className="h-[300px] w-full sm:h-[400px] bg-gradient-to-br from-black/10 to-black/[0.02] dark:from-white/10 dark:to-white/[0.02]" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-5xl px-4 pb-8 sm:px-6">
@@ -195,14 +194,7 @@ export default function ThoughtDetail() {
           <aside className="hidden lg:block">
             <TableOfContents content={article.content} />
           </aside>
-          <article
-            className={cn(
-              'prose max-w-none',
-              isDark
-                ? 'text-white/90 [&_code]:bg-white/10 [&_pre]:bg-white/5 [&_a]:text-white [&_blockquote]:border-white/40'
-                : 'text-gray-800 [&_code]:bg-black/5 [&_pre]:bg-black/[0.03] [&_a]:text-gray-900 [&_blockquote]:border-gray-400'
-            )}
-          >
+          <article className="prose max-w-none text-gray-800 [&_code]:bg-black/5 [&_pre]:bg-black/[0.03] [&_a]:text-gray-900 [&_blockquote]:border-gray-400 dark:text-white/90 dark:[&_code]:bg-white/10 dark:[&_pre]:bg-white/5 dark:[&_a]:text-white dark:[&_blockquote]:border-white/40">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -216,7 +208,7 @@ export default function ThoughtDetail() {
                 },
               }}
             >
-              {article.content}
+              {formattedContent}
             </ReactMarkdown>
           </article>
         </div>
@@ -225,7 +217,7 @@ export default function ThoughtDetail() {
       {/* Related articles */}
       {related.length > 0 && (
         <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-          <h2 className={cn('mb-6 text-xl font-bold', isDark ? 'text-white' : 'text-gray-900')}>相关文章</h2>
+          <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white">相关文章</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {related.map((a) => (
               <ArticleCard key={a.id} article={a} variant="grid" />

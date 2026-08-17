@@ -6,6 +6,7 @@ import { readFile, stat } from 'fs/promises';
 import { join, extname, normalize } from 'path';
 import { fileURLToPath } from 'url';
 import { handleApi } from './apiMiddleware.js';
+import { proxyHandler } from './proxyService.js';
 import { LINKS_FILE } from './linkService.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,15 +39,21 @@ const MIME_TYPES = {
   '.wasm': 'application/wasm',
 };
 
-// 统一 JSON 响应
+// 统一 JSON 响应（同源部署，无 CORS 通配符）
 function sendJSON(res, statusCode, data) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'X-Content-Type-Options': 'nosniff',
   });
   res.end(JSON.stringify(data));
+}
+
+// 基础安全响应头
+function applySecurityHeaders(res) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 }
 
 // 提供静态文件服务（含 SPA 回退到 index.html）
@@ -80,6 +87,7 @@ async function serveStatic(req, res, urlPath) {
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
     const data = await readFile(filePath);
+    applySecurityHeaders(res);
     res.writeHead(200, { 'Content-Type': contentType });
     res.end(data);
   } catch (error) {
@@ -93,9 +101,11 @@ async function serveIndex(res) {
   try {
     const indexPath = join(DIST_DIR, 'index.html');
     const data = await readFile(indexPath);
+    applySecurityHeaders(res);
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(data);
   } catch {
+    applySecurityHeaders(res);
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Not Found');
   }
@@ -104,12 +114,20 @@ async function serveIndex(res) {
 // 创建 HTTP 服务器
 const PORT = process.env.PORT || 3002;
 const server = createServer(async (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const path = url.pathname;
 
-  // CORS 预检
+  // CORS 预检（同源部署，直接放行）
   if (req.method === 'OPTIONS') {
-    sendJSON(res, 200, {});
+    applySecurityHeaders(res);
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
+  // 资源代理（SSRF 防护）
+  if ((path === '/res-proxy' || path === '/img-proxy') && (req.method === 'GET' || req.method === 'HEAD')) {
+    await proxyHandler(req, res);
     return;
   }
 

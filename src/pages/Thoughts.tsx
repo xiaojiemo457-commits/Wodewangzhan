@@ -31,7 +31,6 @@ function getStoredViewMode(): ViewMode {
 }
 
 export default function Thoughts() {
-  const isDark = useStore((s) => s.isDark);
   const articles = useStore((s) => s.articles);
   const loading = useStore((s) => s.loadingArticles);
   const fetchArticles = useStore((s) => s.fetchArticles);
@@ -106,39 +105,31 @@ export default function Thoughts() {
   const showPagination = totalPages > 1;
 
   return (
-    <div className={cn('mx-auto max-w-6xl px-4 py-10 sm:px-6', isDark ? 'text-white' : 'text-gray-900')}>
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 text-gray-900 dark:text-white">
       {/* ===== Header ===== */}
       <div className="mb-8">
-        <h1 className={cn('mb-2 text-3xl font-bold', isDark ? 'text-white' : 'text-gray-900')}>日记</h1>
-        <p className={cn('text-sm', isDark ? 'text-white/50' : 'text-gray-500')}>记录生活与思考的每一刻</p>
+        <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">日记</h1>
+        <p className="text-sm text-gray-500 dark:text-white/50">记录生活与思考的每一刻</p>
       </div>
 
       {/* ===== Search bar ===== */}
       <div className="relative mb-6">
         <Search
           size={18}
-          className={cn(
-            'pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2',
-            isDark ? 'text-white/40' : 'text-gray-400'
-          )}
+          className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40"
         />
         <input
           type="text"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="搜索文章标题或内容…"
-          className={cn(
-            'w-full rounded-xl border py-3 pl-11 pr-4 text-sm outline-none transition-colors',
-            isDark
-              ? 'border-white/10 bg-white/[0.04] text-white placeholder:text-white/30 focus:border-white/40'
-              : 'border-black/10 bg-white text-gray-900 placeholder:text-gray-400 focus:border-black/30'
-          )}
+          className="w-full rounded-xl border py-3 pl-11 pr-4 text-sm outline-none transition-colors border-black/10 bg-white text-gray-900 placeholder:text-gray-400 focus:border-black/30 dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30 dark:focus:border-white/40"
         />
       </div>
 
       {/* ===== Category bar + view switcher ===== */}
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className={cn('-mx-1 flex gap-1 overflow-x-auto px-1 pb-1', isDark ? '' : '')}>
+        <div className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
           {TABS.map((tab) => {
             const active = category === tab.id;
             return (
@@ -149,12 +140,8 @@ export default function Thoughts() {
                 className={cn(
                   'flex-shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm transition-colors',
                   active
-                    ? isDark
-                      ? 'bg-white text-black'
-                      : 'bg-black text-white'
-                    : isDark
-                      ? 'text-white/60 hover:bg-white/5 hover:text-white'
-                      : 'text-gray-500 hover:bg-black/5 hover:text-gray-800'
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
+                    : 'text-gray-500 hover:bg-black/5 hover:text-gray-800 dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white'
                 )}
               >
                 {tab.name}
@@ -163,7 +150,7 @@ export default function Thoughts() {
           })}
         </div>
 
-        <div className={cn('flex flex-shrink-0 items-center gap-1 rounded-lg border p-1', isDark ? 'border-white/10' : 'border-black/10')}>
+        <div className="flex flex-shrink-0 items-center gap-1 rounded-lg border p-1 border-black/10 dark:border-white/10">
           {VIEW_MODES.map(({ mode, icon: Icon, label }) => {
             const active = viewMode === mode;
             return (
@@ -176,12 +163,8 @@ export default function Thoughts() {
                 className={cn(
                   'rounded-md p-1.5 transition-colors',
                   active
-                    ? isDark
-                      ? 'bg-white/15 text-white'
-                      : 'bg-black/10 text-gray-900'
-                    : isDark
-                      ? 'text-white/40 hover:text-white/80'
-                      : 'text-gray-400 hover:text-gray-700'
+                    ? 'bg-black/10 text-gray-900 dark:bg-white/15 dark:text-white'
+                    : 'text-gray-400 hover:text-gray-700 dark:text-white/40 dark:hover:text-white/80'
                 )}
               >
                 <Icon size={18} />
@@ -193,14 +176,9 @@ export default function Thoughts() {
 
       {/* ===== Content ===== */}
       {loading && visibleArticles.length === 0 ? (
-        <div className={cn('py-20 text-center text-sm', isDark ? 'text-white/40' : 'text-gray-400')}>加载中…</div>
+        <div className="py-20 text-center text-sm text-gray-400 dark:text-white/40">加载中…</div>
       ) : visibleArticles.length === 0 ? (
-        <div
-          className={cn(
-            'rounded-2xl border border-dashed py-20 text-center text-sm',
-            isDark ? 'border-white/10 text-white/40' : 'border-black/10 text-gray-400'
-          )}
-        >
+        <div className="rounded-2xl border border-dashed py-20 text-center text-sm border-black/10 text-gray-400 dark:border-white/10 dark:text-white/40">
           暂无文章
         </div>
       ) : viewMode === 'grid' ? (
@@ -220,18 +198,13 @@ export default function Thoughts() {
           {groupedTimeline.map(({ key, items }) => (
             <div key={key}>
               <div className="mb-5 flex items-center gap-3">
-                <span className={cn('h-3 w-3 rounded-full', isDark ? 'bg-white' : 'bg-black')} />
-                <h3 className={cn('text-lg font-semibold', isDark ? 'text-white' : 'text-gray-900')}>{key}</h3>
-                <span className={cn('text-xs', isDark ? 'text-white/40' : 'text-gray-400')}>
+                <span className="h-3 w-3 rounded-full bg-black dark:bg-white" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{key}</h3>
+                <span className="text-xs text-gray-400 dark:text-white/40">
                   {items.length} 篇
                 </span>
               </div>
-              <div
-                className={cn(
-                  'ml-1.5 space-y-5 border-l pb-2 pl-6',
-                  isDark ? 'border-white/10' : 'border-black/10'
-                )}
-              >
+              <div className="ml-1.5 space-y-5 border-l pb-2 pl-6 border-black/10 dark:border-white/10">
                 {items.map((a) => (
                   <ArticleCard key={a.id} article={a} variant="timeline" />
                 ))}
@@ -248,10 +221,7 @@ export default function Thoughts() {
             type="button"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className={cn(
-              'inline-flex items-center gap-1 rounded-lg border px-3 py-2 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40',
-              isDark ? 'border-white/10 hover:bg-white/5' : 'border-black/10 hover:bg-black/5'
-            )}
+            className="inline-flex items-center gap-1 rounded-lg border px-3 py-2 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40 border-black/10 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
           >
             <ChevronLeft size={16} />
             上一页
@@ -262,14 +232,11 @@ export default function Thoughts() {
               <button
                 type="button"
                 onClick={() => setPage(1)}
-                className={cn(
-                  'rounded-lg px-3 py-2 text-sm transition-colors',
-                  isDark ? 'hover:bg-white/5' : 'hover:bg-black/5'
-                )}
+                className="rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/5 dark:hover:bg-white/5"
               >
                 1
               </button>
-              {pageNumbers[0] > 2 && <span className={cn('px-1', isDark ? 'text-white/40' : 'text-gray-400')}>…</span>}
+              {pageNumbers[0] > 2 && <span className="px-1 text-gray-400 dark:text-white/40">…</span>}
             </>
           )}
 
@@ -283,12 +250,8 @@ export default function Thoughts() {
                 className={cn(
                   'min-w-[2.25rem] rounded-lg px-3 py-2 text-sm transition-colors',
                   active
-                    ? isDark
-                      ? 'bg-white font-medium text-black'
-                      : 'bg-black font-medium text-white'
-                    : isDark
-                      ? 'hover:bg-white/5'
-                      : 'hover:bg-black/5'
+                    ? 'bg-black font-medium text-white dark:bg-white dark:text-black'
+                    : 'hover:bg-black/5 dark:hover:bg-white/5'
                 )}
               >
                 {p}
@@ -299,15 +262,12 @@ export default function Thoughts() {
           {pageNumbers[pageNumbers.length - 1] < totalPages && (
             <>
               {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-                <span className={cn('px-1', isDark ? 'text-white/40' : 'text-gray-400')}>…</span>
+                <span className="px-1 text-gray-400 dark:text-white/40">…</span>
               )}
               <button
                 type="button"
                 onClick={() => setPage(totalPages)}
-                className={cn(
-                  'rounded-lg px-3 py-2 text-sm transition-colors',
-                  isDark ? 'hover:bg-white/5' : 'hover:bg-black/5'
-                )}
+                className="rounded-lg px-3 py-2 text-sm transition-colors hover:bg-black/5 dark:hover:bg-white/5"
               >
                 {totalPages}
               </button>
@@ -318,10 +278,7 @@ export default function Thoughts() {
             type="button"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className={cn(
-              'inline-flex items-center gap-1 rounded-lg border px-3 py-2 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40',
-              isDark ? 'border-white/10 hover:bg-white/5' : 'border-black/10 hover:bg-black/5'
-            )}
+            className="inline-flex items-center gap-1 rounded-lg border px-3 py-2 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40 border-black/10 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
           >
             下一页
             <ChevronRight size={16} />

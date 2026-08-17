@@ -45,12 +45,11 @@ function LinkRow({
 }
 
 export default function FriendLinksAdmin() {
-  const { friendLinks, fetchFriendLinks, approveFriendLink, rejectFriendLink, deleteFriendLink } =
-    useStore();
+  const friendLinks = useStore((s) => s.friendLinks);
   const [actionId, setActionId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchFriendLinks();
+    useStore.getState().fetchFriendLinks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,7 +59,7 @@ export default function FriendLinksAdmin() {
   const handleApprove = async (id: string) => {
     setActionId(id);
     try {
-      await approveFriendLink(id);
+      await useStore.getState().approveFriendLink(id);
     } finally {
       setActionId(null);
     }
@@ -69,7 +68,7 @@ export default function FriendLinksAdmin() {
   const handleReject = async (id: string) => {
     setActionId(id);
     try {
-      await rejectFriendLink(id);
+      await useStore.getState().rejectFriendLink(id);
     } finally {
       setActionId(null);
     }
@@ -78,7 +77,7 @@ export default function FriendLinksAdmin() {
   const handleDelete = async (id: string) => {
     setActionId(id);
     try {
-      await deleteFriendLink(id);
+      await useStore.getState().deleteFriendLink(id);
     } finally {
       setActionId(null);
     }

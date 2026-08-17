@@ -31,6 +31,23 @@ export async function createMusic(data) {
   return entry;
 }
 
+// 更新音乐日记
+export async function updateMusic(id, updates) {
+  const music = await getAllMusic();
+  const idx = music.findIndex(m => String(m.id) === String(id));
+  if (idx === -1) throw new Error('音乐不存在');
+  const allowed = ['title', 'artist', 'cover', 'url', 'diary', 'date'];
+  const entry = { ...music[idx] };
+  for (const key of allowed) {
+    if (updates[key] !== undefined) {
+      entry[key] = typeof updates[key] === 'string' ? updates[key].trim() : updates[key];
+    }
+  }
+  music[idx] = entry;
+  await writeJSON(MUSIC_FILE, music);
+  return entry;
+}
+
 // 删除音乐日记
 export async function deleteMusic(id) {
   const music = await getAllMusic();

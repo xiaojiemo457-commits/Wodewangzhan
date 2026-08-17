@@ -19,7 +19,6 @@ function formatDate(dateStr: string): string {
 }
 
 export default function ArticleCard({ article, variant = 'grid' }: ArticleCardProps) {
-  const isDark = useStore((s) => s.isDark);
   const categories = useStore((s) => s.categories);
 
   const categoryName =
@@ -37,28 +36,18 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
   ) : (
-    <div
-      className={cn(
-        'h-full w-full',
-        isDark ? 'bg-gradient-to-br from-white/10 to-white/5' : 'bg-gradient-to-br from-black/5 to-black/10'
-      )}
-    />
+    <div className="h-full w-full bg-gradient-to-br from-black/5 to-black/10 dark:from-white/10 dark:to-white/5" />
   );
 
   const dateNode = (
-    <div className={cn('flex items-center gap-1.5 text-xs', isDark ? 'text-white/40' : 'text-gray-400')}>
+    <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-white/40">
       <Calendar size={12} />
       <span>{formatDate(article.created_at)}</span>
     </div>
   );
 
   const categoryBadge = categoryName ? (
-    <span
-      className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-        isDark ? 'bg-white/10 text-white/80' : 'bg-black/5 text-gray-600'
-      )}
-    >
+    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-black/5 text-gray-600 dark:bg-white/10 dark:text-white/80">
       {categoryName}
     </span>
   ) : null;
@@ -68,12 +57,7 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
     return (
       <Link
         to={detailLink}
-        className={cn(
-          'group block overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
-          isDark
-            ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:shadow-black/40'
-            : 'border-black/5 bg-white hover:shadow-black/10'
-        )}
+        className="group block overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border-black/5 bg-white hover:shadow-black/10 dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.06] dark:hover:shadow-black/40"
       >
         <div className="relative aspect-[16/9] overflow-hidden">
           {cover}
@@ -86,15 +70,10 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
           )}
         </div>
         <div className="p-5">
-          <h3
-            className={cn(
-              'mb-2 line-clamp-1 text-lg font-semibold transition-colors',
-              isDark ? 'text-white' : 'text-gray-900'
-            )}
-          >
+          <h3 className="mb-2 line-clamp-1 text-lg font-semibold transition-colors text-gray-900 dark:text-white">
             {article.title}
           </h3>
-          <p className={cn('mb-3 line-clamp-2 text-sm leading-relaxed', isDark ? 'text-white/60' : 'text-gray-500')}>
+          <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-gray-500 dark:text-white/60">
             {article.summary}
           </p>
           {dateNode}
@@ -108,12 +87,7 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
     return (
       <Link
         to={detailLink}
-        className={cn(
-          'group flex gap-5 overflow-hidden rounded-2xl border p-4 transition-all duration-300 hover:shadow-lg',
-          isDark
-            ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06]'
-            : 'border-black/5 bg-white hover:shadow-black/10'
-        )}
+        className="group flex gap-5 overflow-hidden rounded-2xl border p-4 transition-all duration-300 hover:shadow-lg border-black/5 bg-white hover:shadow-black/10 dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]"
       >
         <div className="relative h-28 w-[200px] flex-shrink-0 overflow-hidden rounded-xl sm:h-32">
           {cover}
@@ -123,15 +97,10 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
             {categoryBadge}
             {dateNode}
           </div>
-          <h3
-            className={cn(
-              'mb-1.5 line-clamp-1 text-lg font-semibold transition-colors',
-              isDark ? 'text-white group-hover:text-white' : 'text-gray-900'
-            )}
-          >
+          <h3 className="mb-1.5 line-clamp-1 text-lg font-semibold transition-colors text-gray-900 dark:text-white">
             {article.title}
           </h3>
-          <p className={cn('line-clamp-2 text-sm leading-relaxed', isDark ? 'text-white/60' : 'text-gray-500')}>
+          <p className="line-clamp-2 text-sm leading-relaxed text-gray-500 dark:text-white/60">
             {article.summary}
           </p>
         </div>
@@ -142,20 +111,10 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
   // ===== Timeline variant =====
   return (
     <div className="relative">
-      <span
-        className={cn(
-          'absolute -left-6 top-6 z-10 h-3 w-3 -translate-x-1/2 rounded-full border-2',
-          isDark ? 'border-white bg-white' : 'border-black bg-black'
-        )}
-      />
+      <span className="absolute -left-6 top-6 z-10 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-black bg-black dark:border-white dark:bg-white" />
       <Link
         to={detailLink}
-        className={cn(
-          'group flex gap-5 overflow-hidden rounded-2xl border p-4 transition-all duration-300 hover:shadow-lg',
-          isDark
-            ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06]'
-            : 'border-black/5 bg-white hover:shadow-black/10'
-        )}
+        className="group flex gap-5 overflow-hidden rounded-2xl border p-4 transition-all duration-300 hover:shadow-lg border-black/5 bg-white hover:shadow-black/10 dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]"
       >
         <div className="relative h-24 w-[160px] flex-shrink-0 overflow-hidden rounded-xl sm:h-28">
           {cover}
@@ -165,15 +124,10 @@ export default function ArticleCard({ article, variant = 'grid' }: ArticleCardPr
             {categoryBadge}
             {dateNode}
           </div>
-          <h3
-            className={cn(
-              'mb-1 line-clamp-1 text-base font-semibold transition-colors',
-              isDark ? 'text-white' : 'text-gray-900'
-            )}
-          >
+          <h3 className="mb-1 line-clamp-1 text-base font-semibold transition-colors text-gray-900 dark:text-white">
             {article.title}
           </h3>
-          <p className={cn('line-clamp-2 text-sm leading-relaxed', isDark ? 'text-white/60' : 'text-gray-500')}>
+          <p className="line-clamp-2 text-sm leading-relaxed text-gray-500 dark:text-white/60">
             {article.summary}
           </p>
         </div>

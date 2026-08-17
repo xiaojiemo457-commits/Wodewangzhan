@@ -10,6 +10,7 @@ import {
   User,
   Wrench,
   CornerDownLeft,
+  History,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
@@ -28,21 +29,24 @@ interface SearchResult {
 const pageLinks: SearchResult[] = [
   { id: 'page-home', title: '首页', subtitle: '/', type: '页面', url: '/', icon: Home },
   { id: 'page-thoughts', title: '日记', subtitle: '/thoughts', type: '页面', url: '/thoughts', icon: BookOpen },
-  { id: 'page-treasure', title: '宝典', subtitle: '/treasure', type: '页面', url: '/treasure', icon: BookOpen },
+  { id: 'page-treasure', title: '宝典', subtitle: '/treasure', type: '页面', url: '/treasure', icon: Wrench },
   { id: 'page-moments', title: '瞬间', subtitle: '/moments', type: '页面', url: '/moments', icon: Camera },
+  { id: 'page-timeline', title: '时间轴', subtitle: '/timeline', type: '页面', url: '/timeline', icon: History },
   { id: 'page-music', title: '音乐', subtitle: '/music', type: '页面', url: '/music', icon: Music },
   { id: 'page-about', title: '关于', subtitle: '/about', type: '页面', url: '/about', icon: User },
 ];
 
 const typeBadgeClass: Record<ResultType, string> = {
-  文章: 'bg-indigo-500/20 text-indigo-300',
-  页面: 'bg-emerald-500/20 text-emerald-300',
-  工具: 'bg-amber-500/20 text-amber-300',
+  文章: 'bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300',
+  页面: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300',
+  工具: 'bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-300',
 };
 
 export default function CommandPalette() {
   const navigate = useNavigate();
-  const { isDark, commandPaletteOpen, setCommandPaletteOpen, articles, tools } = useStore();
+  const commandPaletteOpen = useStore((s) => s.commandPaletteOpen);
+  const articles = useStore((s) => s.articles);
+  const tools = useStore((s) => s.tools);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,12 +56,12 @@ export default function CommandPalette() {
     const handler = (e: globalThis.KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setCommandPaletteOpen(true);
+        useStore.getState().setCommandPaletteOpen(true);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [setCommandPaletteOpen]);
+  }, []);
 
   // Auto-focus input on open & reset query
   useEffect(() => {
@@ -117,7 +121,7 @@ export default function CommandPalette() {
   }, [query]);
 
   const go = (url: string) => {
-    setCommandPaletteOpen(false);
+    useStore.getState().setCommandPaletteOpen(false);
     navigate(url);
   };
 
@@ -133,7 +137,7 @@ export default function CommandPalette() {
       if (results[selectedIndex]) go(results[selectedIndex].url);
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      setCommandPaletteOpen(false);
+      useStore.getState().setCommandPaletteOpen(false);
     }
   };
 
@@ -142,43 +146,24 @@ export default function CommandPalette() {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 p-4 pt-[15vh] backdrop-blur-sm"
-      onClick={() => setCommandPaletteOpen(false)}
+      onClick={() => useStore.getState().setCommandPaletteOpen(false)}
     >
       <div
-        className={cn(
-          'w-full max-w-xl overflow-hidden rounded-2xl border shadow-2xl',
-          isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-white',
-        )}
+        className="w-full max-w-xl overflow-hidden rounded-2xl border shadow-2xl border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search input */}
-        <div
-          className={cn(
-            'flex items-center gap-3 border-b px-4 py-3',
-            isDark ? 'border-gray-800' : 'border-gray-200',
-          )}
-        >
-          <Search
-            size={18}
-            className={isDark ? 'text-gray-500' : 'text-gray-400'}
-          />
+        <div className="flex items-center gap-3 border-b px-4 py-3 border-gray-200 dark:border-gray-800">
+          <Search size={18} className="text-gray-400 dark:text-gray-500" />
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="搜索文章、页面、工具..."
-            className={cn(
-              'flex-1 bg-transparent text-sm outline-none',
-              isDark ? 'text-white placeholder:text-gray-500' : 'text-gray-900 placeholder:text-gray-400',
-            )}
+            className="flex-1 bg-transparent text-sm outline-none text-gray-900 placeholder:text-gray-400 dark:text-white dark:placeholder:text-gray-500"
           />
-          <kbd
-            className={cn(
-              'rounded border px-1.5 py-0.5 text-xs',
-              isDark ? 'border-gray-700 text-gray-500' : 'border-gray-300 text-gray-400',
-            )}
-          >
+          <kbd className="rounded border px-1.5 py-0.5 text-xs border-gray-300 text-gray-400 dark:border-gray-700 dark:text-gray-500">
             ESC
           </kbd>
         </div>
@@ -186,12 +171,7 @@ export default function CommandPalette() {
         {/* Results */}
         <div className="max-h-80 overflow-y-auto p-2">
           {results.length === 0 ? (
-            <div
-              className={cn(
-                'py-10 text-center text-sm',
-                isDark ? 'text-gray-500' : 'text-gray-400',
-              )}
-            >
+            <div className="py-10 text-center text-sm text-gray-400 dark:text-gray-500">
               未找到匹配结果
             </div>
           ) : (
@@ -205,32 +185,15 @@ export default function CommandPalette() {
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={cn(
                     'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition',
-                    active
-                      ? isDark
-                        ? 'bg-gray-800'
-                        : 'bg-gray-100'
-                      : '',
+                    active && 'bg-gray-100 dark:bg-gray-800',
                   )}
                 >
-                  <Icon
-                    size={18}
-                    className={isDark ? 'text-gray-400' : 'text-gray-500'}
-                  />
+                  <Icon size={18} className="text-gray-500 dark:text-gray-400" />
                   <div className="min-w-0 flex-1">
-                    <div
-                      className={cn(
-                        'truncate text-sm font-medium',
-                        isDark ? 'text-gray-200' : 'text-gray-800',
-                      )}
-                    >
+                    <div className="truncate text-sm font-medium text-gray-800 dark:text-gray-200">
                       {result.title}
                     </div>
-                    <div
-                      className={cn(
-                        'truncate text-xs',
-                        isDark ? 'text-gray-500' : 'text-gray-400',
-                      )}
-                    >
+                    <div className="truncate text-xs text-gray-400 dark:text-gray-500">
                       {result.subtitle}
                     </div>
                   </div>
@@ -243,10 +206,7 @@ export default function CommandPalette() {
                     {result.type}
                   </span>
                   {active && (
-                    <CornerDownLeft
-                      size={14}
-                      className={isDark ? 'text-gray-600' : 'text-gray-400'}
-                    />
+                    <CornerDownLeft size={14} className="text-gray-400 dark:text-gray-600" />
                   )}
                 </button>
               );

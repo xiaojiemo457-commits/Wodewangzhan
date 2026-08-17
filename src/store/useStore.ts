@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Article, Tool, Photo, MusicEntry, Category, FriendLink } from '../types';
+import { Article, Tool, Photo, MusicEntry, Category, FriendLink, TimelineEvent, AboutData } from '../types';
 import * as api from '../services/api';
 
 interface AppState {
@@ -12,6 +12,10 @@ interface AppState {
   // 管理员
   isAdmin: boolean;
   setIsAdmin: (v: boolean) => void;
+
+  // 全局错误（不再静默吞掉异常）
+  lastError: string | null;
+  clearError: () => void;
 
   // 文章
   articles: Article[];
@@ -45,9 +49,31 @@ interface AppState {
   rejectFriendLink: (id: string) => Promise<void>;
   deleteFriendLink: (id: string) => Promise<void>;
 
+  // 站点设置
+  siteSettings: api.SiteSettings | null;
+  fetchSiteSettings: () => Promise<void>;
+
+  // 时间轴
+  timelineEvents: TimelineEvent[];
+  fetchTimeline: () => Promise<void>;
+  addTimelineEvent: (data: Partial<TimelineEvent>) => Promise<void>;
+  updateTimelineItem: (id: string, data: Partial<TimelineEvent>) => Promise<void>;
+  removeTimelineEvent: (id: string) => Promise<void>;
+
+  // 关于页
+  about: AboutData | null;
+  fetchAbout: () => Promise<void>;
+  updateAboutPage: (data: Partial<AboutData>) => Promise<void>;
+
   // 命令面板
   commandPaletteOpen: boolean;
   setCommandPaletteOpen: (v: boolean) => void;
+}
+
+/** 记录错误到控制台并写入 store，供 UI 展示（不再静默吞掉） */
+function reportError(set: (p: Partial<AppState>) => void, e: unknown) {
+  console.error('[store]', e);
+  set({ lastError: e instanceof Error ? e.message : '请求失败，请稍后重试' });
 }
 
 const getInitialTheme = (): 'light' | 'dark' => {
@@ -71,7 +97,11 @@ export const categories: Category[] = [
   { id: '6', name: '爱情', slug: 'love' },
 ];
 
-export const useStore = create<AppState>((set, get) => {
+// Vite HMR 持久化：防止热更新时创建新的 store 实例导致组件订阅失效
+const hmr = (import.meta as any).hot;
+
+function _create() {
+  return create<AppState>((set, get) => {
   const initialTheme = getInitialTheme();
   applyTheme(initialTheme);
 
@@ -91,6 +121,9 @@ export const useStore = create<AppState>((set, get) => {
     isAdmin: false,
     setIsAdmin: (v) => set({ isAdmin: v }),
 
+    lastError: null,
+    clearError: () => set({ lastError: null }),
+
     articles: [],
     loadingArticles: false,
     fetchArticles: async (params) => {
@@ -99,8 +132,9 @@ export const useStore = create<AppState>((set, get) => {
         const result = await api.fetchArticles(params);
         set({ articles: result.items, loadingArticles: false });
         return { total: result.total, page: result.page, totalPages: result.totalPages };
-      } catch {
+      } catch (e) {
         set({ loadingArticles: false });
+        reportError(set, e);
         return { total: 0, page: 1, totalPages: 0 };
       }
     },
@@ -113,7 +147,7 @@ export const useStore = create<AppState>((set, get) => {
       try {
         const tools = await api.fetchTools();
         set({ tools });
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
     addTool: (tool) => set((s) => ({ tools: [...s.tools, tool] })),
     updateTool: (id, updates) => set((s) => ({ tools: s.tools.map((t) => (t.id === id ? { ...t, ...updates } : t)) })),
@@ -124,7 +158,7 @@ export const useStore = create<AppState>((set, get) => {
       try {
         const photos = await api.fetchPhotos();
         set({ photos });
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
 
     musicEntries: [],
@@ -132,7 +166,7 @@ export const useStore = create<AppState>((set, get) => {
       try {
         const music = await api.fetchMusic();
         set({ musicEntries: music });
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
 
     friendLinks: [],
@@ -140,34 +174,91 @@ export const useStore = create<AppState>((set, get) => {
       try {
         const result = await api.fetchFriendLinks();
         set({ friendLinks: result.all });
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
     addFriendLink: async (data) => {
       try {
         const result = await api.addFriendLink(data);
         set((s) => ({ friendLinks: [...s.friendLinks, result.link] }));
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
     approveFriendLink: async (id) => {
       try {
         await api.approveFriendLink(id);
         set((s) => ({ friendLinks: s.friendLinks.map((l) => (l.id === id ? { ...l, status: 'approved' as const } : l)) }));
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
     rejectFriendLink: async (id) => {
       try {
         await api.rejectFriendLink(id);
         set((s) => ({ friendLinks: s.friendLinks.map((l) => (l.id === id ? { ...l, status: 'rejected' as const } : l)) }));
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
     deleteFriendLink: async (id) => {
       try {
         await api.deleteFriendLink(id);
         set((s) => ({ friendLinks: s.friendLinks.filter((l) => l.id !== id) }));
-      } catch { /* noop */ }
+      } catch (e) { reportError(set, e); }
     },
 
     commandPaletteOpen: false,
     setCommandPaletteOpen: (v) => set({ commandPaletteOpen: v }),
+
+    siteSettings: null,
+    fetchSiteSettings: async () => {
+      try {
+        const settings = await api.getSettings();
+        set({ siteSettings: settings });
+      } catch (e) { reportError(set, e); }
+    },
+
+    timelineEvents: [],
+    fetchTimeline: async () => {
+      try {
+        const items = await api.fetchTimeline();
+        set({ timelineEvents: items });
+      } catch (e) { reportError(set, e); }
+    },
+    addTimelineEvent: async (data) => {
+      try {
+        const res = await api.createTimelineEvent(data);
+        set((s) => ({ timelineEvents: [...s.timelineEvents, res.item] }));
+      } catch (e) { reportError(set, e); }
+    },
+    updateTimelineItem: async (id, data) => {
+      try {
+        const res = await api.updateTimelineEvent(id, data);
+        set((s) => ({ timelineEvents: s.timelineEvents.map((t) => (t.id === id ? res.item : t)) }));
+      } catch (e) { reportError(set, e); }
+    },
+    removeTimelineEvent: async (id) => {
+      try {
+        await api.deleteTimelineEvent(id);
+        set((s) => ({ timelineEvents: s.timelineEvents.filter((t) => t.id !== id) }));
+      } catch (e) { reportError(set, e); }
+    },
+
+    about: null,
+    fetchAbout: async () => {
+      try {
+        const about = await api.fetchAbout();
+        set({ about });
+      } catch (e) { reportError(set, e); }
+    },
+    updateAboutPage: async (data) => {
+      try {
+        const res = await api.updateAbout(data);
+        set({ about: res.about });
+      } catch (e) { reportError(set, e); }
+    },
   };
-});
+  });
+}
+
+export const useStore: ReturnType<typeof _create> = hmr?.data?.useStore ?? _create();
+
+if (hmr) {
+  hmr.dispose((data: any) => {
+    data.useStore = useStore;
+  });
+}

@@ -17,7 +17,6 @@ interface Status {
 }
 
 export default function Home() {
-  const isDark = useStore((s) => s.isDark);
   const friendLinks = useStore((s) => s.friendLinks);
   const fetchFriendLinks = useStore((s) => s.fetchFriendLinks);
   const addFriendLink = useStore((s) => s.addFriendLink);
@@ -59,47 +58,27 @@ export default function Home() {
   };
 
   return (
-    <div className={cn('relative min-h-screen', isDark ? 'text-white' : 'text-gray-900')}>
+    <div className="relative min-h-screen text-gray-900 dark:text-white">
       {/* Full-page fluid background */}
-      <FluidBackground isDark={isDark} />
+      <FluidBackground />
 
       {/* ===== Hero ===== */}
       <section className="relative z-10 flex h-screen items-center justify-center overflow-hidden px-6">
         <div className="animate-fade-in-up relative z-10 flex flex-col items-center text-center px-6">
-          <p
-            className={cn(
-              'mb-6 text-xs tracking-[0.4em] uppercase sm:text-sm',
-              isDark ? 'text-white/40' : 'text-gray-400'
-            )}
-          >
+          <p className="mb-6 text-xs tracking-[0.4em] uppercase sm:text-sm text-gray-400 dark:text-white/40">
             — A Personal Space —
           </p>
           <h1
-            className={cn(
-              'mb-6 text-4xl font-bold leading-tight sm:text-6xl md:text-7xl lg:text-8xl',
-              isDark ? 'text-white' : 'text-gray-900'
-            )}
+            className="mb-6 text-4xl font-bold leading-tight sm:text-6xl md:text-7xl lg:text-8xl text-gray-900 dark:text-white"
             style={{ letterSpacing: '-0.02em' }}
           >
             用心记录
             <br />
-            <span
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: isDark
-                  ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)'
-                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #feca57 100%)',
-              }}
-            >
+            <span className="bg-clip-text text-transparent bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_50%,#feca57_100%)] dark:bg-[linear-gradient(135deg,#667eea_0%,#764ba2_50%,#f093fb_100%)]">
               生活的每一刻
             </span>
           </h1>
-          <p
-            className={cn(
-              'mb-10 max-w-xl text-base leading-relaxed sm:text-lg',
-              isDark ? 'text-white/50' : 'text-gray-500'
-            )}
-          >
+          <p className="mb-10 max-w-xl text-base leading-relaxed sm:text-lg text-gray-500 dark:text-white/50">
             在文字里修行，在时光中沉淀。
             <br />
             关于技术、生活、阅读、旅行与思考的私人笔记。
@@ -107,12 +86,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               to="/thoughts"
-              className={cn(
-                'group relative inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5',
-                isDark
-                  ? 'bg-white text-black hover:bg-white/90 shadow-lg shadow-white/10'
-                  : 'bg-black text-white hover:bg-black/90 shadow-lg shadow-black/20'
-              )}
+              className="group relative inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 bg-black text-white hover:bg-black/90 shadow-lg shadow-black/20 dark:bg-white dark:text-black dark:hover:bg-white/90 dark:shadow-white/10"
             >
               <span>浏览日记</span>
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,12 +95,7 @@ export default function Home() {
             </Link>
             <Link
               to="/about"
-              className={cn(
-                'inline-flex items-center gap-2 rounded-full border-2 px-8 py-3.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5',
-                isDark
-                  ? 'border-white/20 text-white hover:border-white/40 hover:bg-white/5'
-                  : 'border-black/20 text-gray-900 hover:border-black/40 hover:bg-black/5'
-              )}
+              className="inline-flex items-center gap-2 rounded-full border-2 px-8 py-3.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 border-black/20 text-gray-900 hover:border-black/40 hover:bg-black/5 dark:border-white/20 dark:text-white dark:hover:border-white/40 dark:hover:bg-white/5"
             >
               关于我
             </Link>
@@ -136,7 +105,7 @@ export default function Home() {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
           <svg
-            className={cn('w-6 h-6', isDark ? 'text-white/30' : 'text-gray-300')}
+            className="w-6 h-6 text-gray-300 dark:text-white/30"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -151,44 +120,22 @@ export default function Home() {
         {/* ===== Friend Links ===== */}
         <section className="relative py-24 overflow-hidden">
           {/* Section background decoration */}
-          <div
-            className={cn(
-              'absolute inset-0 pointer-events-none',
-              isDark
-                ? 'bg-gradient-to-b from-transparent via-white/[0.02] to-transparent'
-                : 'bg-gradient-to-b from-transparent via-gray-50 to-transparent'
-            )}
-          />
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-gray-50 to-transparent dark:via-white/[0.02]" />
 
           <div className="relative mx-auto max-w-5xl px-6">
             <div className="mb-14 text-center">
-              <p
-                className={cn(
-                  'mb-4 text-xs tracking-[0.3em] uppercase',
-                  isDark ? 'text-white/30' : 'text-gray-400'
-                )}
-              >
+              <p className="mb-4 text-xs tracking-[0.3em] uppercase text-gray-400 dark:text-white/30">
                 — Friend Links —
               </p>
               <h2
-                className={cn(
-                  'text-4xl font-bold sm:text-5xl',
-                  isDark ? 'text-white' : 'text-gray-900'
-                )}
+                className="text-4xl font-bold sm:text-5xl text-gray-900 dark:text-white"
                 style={{ letterSpacing: '-0.02em' }}
               >
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: isDark
-                      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                      : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                  }}
-                >
+                <span className="bg-clip-text text-transparent bg-[linear-gradient(135deg,#6366f1_0%,#8b5cf6_100%)] dark:bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]">
                   友情链接
                 </span>
               </h2>
-              <p className={cn('mt-4 text-base', isDark ? 'text-white/40' : 'text-gray-500')}>
+              <p className="mt-4 text-base text-gray-500 dark:text-white/40">
                 与有趣的灵魂相遇，记录彼此的足迹
               </p>
             </div>
@@ -201,88 +148,45 @@ export default function Home() {
                     href={safeUrl(link.url)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={cn(
-                      'group relative flex items-start gap-4 rounded-2xl border p-5 transition-all duration-500 hover:-translate-y-1 backdrop-blur-xl',
-                      isDark
-                        ? 'border-white/[0.15] bg-white/[0.08] hover:bg-white/[0.14] hover:border-white/30 hover:shadow-2xl hover:shadow-purple-500/20'
-                        : 'border-white/80 bg-white/50 hover:bg-white/65 hover:shadow-xl hover:shadow-gray-300/60 hover:border-white'
-                    )}
+                    className="group relative flex items-start gap-4 rounded-2xl border p-5 transition-all duration-500 hover:-translate-y-1 backdrop-blur-xl border-white/80 bg-white/50 hover:bg-white/65 hover:shadow-xl hover:shadow-gray-300/60 hover:border-white dark:border-white/[0.15] dark:bg-white/[0.08] dark:hover:bg-white/[0.14] dark:hover:border-white/30 dark:hover:shadow-2xl dark:hover:shadow-purple-500/20"
                     style={{ animationDelay: `${idx * 80}ms` }}
                   >
                     {/* Icon circle */}
-                    <div
-                      className={cn(
-                        'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl transition-all duration-500',
-                        isDark
-                          ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 group-hover:from-indigo-500/40 group-hover:to-purple-500/40'
-                          : 'bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 group-hover:from-indigo-100 group-hover:to-purple-100'
-                      )}
-                    >
+                    <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl transition-all duration-500 bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 group-hover:from-indigo-100 group-hover:to-purple-100 dark:from-indigo-500/20 dark:to-purple-500/20 dark:text-indigo-300 dark:group-hover:from-indigo-500/40 dark:group-hover:to-purple-500/40">
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                       </svg>
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <h3
-                        className={cn(
-                          'mb-1 truncate font-semibold transition-colors',
-                          isDark
-                            ? 'text-white group-hover:text-indigo-300'
-                            : 'text-gray-900 group-hover:text-indigo-600'
-                        )}
-                      >
+                      <h3 className="mb-1 truncate font-semibold transition-colors text-gray-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-300">
                         {link.name}
                       </h3>
-                      <p className={cn('line-clamp-2 text-sm leading-relaxed', isDark ? 'text-white/40' : 'text-gray-500')}>
+                      <p className="line-clamp-2 text-sm leading-relaxed text-gray-500 dark:text-white/40">
                         {link.description || '暂无描述'}
                       </p>
                     </div>
 
                     <ExternalLink
                       size={16}
-                      className={cn(
-                        'mt-1 flex-shrink-0 transition-all duration-300',
-                        isDark
-                          ? 'text-white/30 group-hover:text-indigo-300 group-hover:translate-x-0.5'
-                          : 'text-gray-300 group-hover:text-indigo-500 group-hover:translate-x-0.5'
-                      )}
+                      className="mt-1 flex-shrink-0 transition-all duration-300 text-gray-300 group-hover:text-indigo-500 group-hover:translate-x-0.5 dark:text-white/30 dark:group-hover:text-indigo-300"
                     />
                   </a>
                 ))}
               </div>
             ) : (
-              <div
-                className={cn(
-                  'mb-16 rounded-2xl border border-dashed p-16 text-center',
-                  isDark ? 'border-white/10 text-white/30' : 'border-gray-200 text-gray-400'
-                )}
-              >
+              <div className="mb-16 rounded-2xl border border-dashed p-16 text-center border-gray-200 text-gray-400 dark:border-white/10 dark:text-white/30">
                 暂无友链，欢迎成为第一个。
               </div>
             )}
 
             {/* Friend link submission form */}
-            <div
-              className={cn(
-                'mx-auto max-w-2xl rounded-3xl border p-8 shadow-xl transition-shadow backdrop-blur-xl',
-                isDark
-                  ? 'border-white/[0.15] bg-white/[0.08] shadow-black/30'
-                  : 'border-white/80 bg-white/50 shadow-gray-300/60'
-              )}
-            >
+            <div className="mx-auto max-w-2xl rounded-3xl border p-8 shadow-xl transition-shadow backdrop-blur-xl border-white/80 bg-white/50 shadow-gray-300/60 dark:border-white/[0.15] dark:bg-white/[0.08] dark:shadow-black/30">
               <div className="mb-6 flex items-center gap-3">
-                <div
-                  className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-xl',
-                    isDark
-                      ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300'
-                      : 'bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600'
-                  )}
-                >
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-600 dark:from-indigo-500/20 dark:to-purple-500/20 dark:text-indigo-300">
                   <Send size={18} />
                 </div>
-                <h3 className={cn('text-xl font-bold', isDark ? 'text-white' : 'text-gray-900')}>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                   申请友链
                 </h3>
               </div>
@@ -290,7 +194,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div>
                     <label
-                      className={cn('mb-2 block text-sm font-medium', isDark ? 'text-white/60' : 'text-gray-700')}
+                      className="mb-2 block text-sm font-medium text-gray-700 dark:text-white/60"
                       htmlFor="fl-name"
                     >
                       站点名称
@@ -301,17 +205,12 @@ export default function Home() {
                       value={form.name}
                       onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                       placeholder="我的博客"
-                      className={cn(
-                        'w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200 focus:ring-2',
-                        isDark
-                          ? 'border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-                          : 'border-white/80 bg-white/50 text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-indigo-100 focus:bg-white/80'
-                      )}
+                      className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200 focus:ring-2 border-white/80 bg-white/50 text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-indigo-100 focus:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30 dark:focus:border-indigo-500/50 dark:focus:ring-indigo-500/20"
                     />
                   </div>
                   <div>
                     <label
-                      className={cn('mb-2 block text-sm font-medium', isDark ? 'text-white/60' : 'text-gray-700')}
+                      className="mb-2 block text-sm font-medium text-gray-700 dark:text-white/60"
                       htmlFor="fl-url"
                     >
                       站点链接
@@ -322,18 +221,13 @@ export default function Home() {
                       value={form.url}
                       onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
                       placeholder="https://example.com"
-                      className={cn(
-                        'w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200 focus:ring-2',
-                        isDark
-                          ? 'border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-                          : 'border-white/80 bg-white/50 text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-indigo-100 focus:bg-white/80'
-                      )}
+                      className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200 focus:ring-2 border-white/80 bg-white/50 text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-indigo-100 focus:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30 dark:focus:border-indigo-500/50 dark:focus:ring-indigo-500/20"
                     />
                   </div>
                 </div>
                 <div>
                   <label
-                    className={cn('mb-2 block text-sm font-medium', isDark ? 'text-white/60' : 'text-gray-700')}
+                    className="mb-2 block text-sm font-medium text-gray-700 dark:text-white/60"
                     htmlFor="fl-desc"
                   >
                     站点描述
@@ -344,12 +238,7 @@ export default function Home() {
                     value={form.description}
                     onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                     placeholder="一句话介绍你的站点"
-                    className={cn(
-                      'w-full resize-none rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200 focus:ring-2',
-                      isDark
-                        ? 'border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-                        : 'border-white/80 bg-white/50 text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-indigo-100 focus:bg-white/80'
-                    )}
+                    className="w-full resize-none rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200 focus:ring-2 border-white/80 bg-white/50 text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-indigo-100 focus:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30 dark:focus:border-indigo-500/50 dark:focus:ring-indigo-500/20"
                   />
                 </div>
 
@@ -358,8 +247,8 @@ export default function Home() {
                     className={cn(
                       'text-sm',
                       status.type === 'success'
-                        ? isDark ? 'text-green-400' : 'text-green-600'
-                        : isDark ? 'text-red-400' : 'text-red-600'
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-red-600 dark:text-red-400'
                     )}
                   >
                     {status.message}
@@ -369,12 +258,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0',
-                    isDark
-                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:shadow-lg hover:shadow-purple-500/30'
-                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-purple-500/25'
-                  )}
+                  className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg hover:shadow-purple-500/25 dark:from-indigo-500 dark:to-purple-500 dark:hover:shadow-purple-500/30"
                 >
                   {submitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                   {submitting ? '提交中…' : '提交申请'}

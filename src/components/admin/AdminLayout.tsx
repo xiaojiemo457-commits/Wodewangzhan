@@ -4,9 +4,11 @@ import {
   LayoutDashboard,
   FileText,
   Wrench,
-  Image,
   Link as LinkIcon,
   Settings as SettingsIcon,
+  Music,
+  History,
+  UserCircle,
   LogOut,
   ArrowLeft,
   Menu,
@@ -14,12 +16,15 @@ import {
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
+import { logout as apiLogout } from '@/services/api';
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, title: '控制台' },
   { to: '/admin/articles', label: '文章', icon: FileText, title: '文章管理' },
   { to: '/admin/tools', label: '工具', icon: Wrench, title: '工具管理' },
-  { to: '/admin/photos', label: '照片', icon: Image, title: '照片管理' },
+  { to: '/admin/music', label: '音乐', icon: Music, title: '音乐日记' },
+  { to: '/admin/timeline', label: '时间轴', icon: History, title: '时间轴管理' },
+  { to: '/admin/about', label: '关于', icon: UserCircle, title: '关于页管理' },
   { to: '/admin/friend-links', label: '友链', icon: LinkIcon, title: '友链管理' },
   { to: '/admin/settings', label: '设置', icon: SettingsIcon, title: '站点设置' },
 ];
@@ -34,15 +39,15 @@ function getPageTitle(pathname: string): string {
 export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { setIsAdmin } = useStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const isActive = (to: string) =>
     to === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(to);
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_auth_token');
-    setIsAdmin(false);
+  const handleLogout = async () => {
+    try { await apiLogout(); } catch { /* noop */ }
+    localStorage.removeItem('admin_token');
+    useStore.getState().setIsAdmin(false);
     navigate('/admin/login');
   };
 

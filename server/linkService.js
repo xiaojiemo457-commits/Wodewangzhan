@@ -76,14 +76,28 @@ export async function saveData(data) {
   await writeFile(LINKS_FILE, JSON.stringify(data, null, 2));
 }
 
-// 获取所有友链
+// 获取所有友链（all 数组统一为前端字段格式：type / status / created_at）
 export async function getAllLinks() {
   const data = await loadData();
+  const mapLink = (l, type) => ({
+    id: l.id,
+    name: l.name,
+    url: l.url,
+    description: l.description || '',
+    color: l.color || '',
+    type,
+    status: l.status || 'pending',
+    created_at: new Date(l.createdAt || Date.now()).toISOString(),
+  });
   return {
-    builtin: builtinLinks,
-    admin: data.adminLinks,
-    visitor: data.visitorLinks,
-    all: [...builtinLinks, ...data.adminLinks, ...data.visitorLinks],
+    builtin: builtinLinks.map((l) => mapLink(l, 'builtin')),
+    admin: data.adminLinks.map((l) => mapLink(l, 'admin')),
+    visitor: data.visitorLinks.map((l) => mapLink(l, 'visitor')),
+    all: [
+      ...builtinLinks.map((l) => mapLink(l, 'builtin')),
+      ...data.adminLinks.map((l) => mapLink(l, 'admin')),
+      ...data.visitorLinks.map((l) => mapLink(l, 'visitor')),
+    ],
   };
 }
 

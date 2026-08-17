@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>莫的个人空间 - 项目全面审查报告</title>
+<style>
+  :root {
+    --bg: #0f0f13;
+    --bg-card: #1a1a22;
+    --bg-card-hover: #20202a;
+    --border: #2a2a36;
+    --border-hover: #3a3a4a;
+    --text: #e4e4ea;
+    --text-muted: #8888a0;
+    --text-dim: #5a5a6e;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.08);
+    --orange: #f97316;
+    --orange-bg: rgba(249,115,22,0.08);
+    --yellow: #eab308;
+    --yellow-bg: rgba(234,179,8,0.08);
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.08);
+    --blue: #3b82f6;
+    --blue-bg: rgba(59,130,246,0.08);
+    --purple: #a855f7;
+    --purple-bg: rgba(168,85,247,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 64px; }
+  .hero h1 {
+    font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #818cf8 0%, #a855f7 50%, #ec4899 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .hero .subtitle { color: var(--text-muted); font-size: 1rem; }
+  .hero .meta {
+    display: inline-flex; gap: 12px; margin-top: 20px;
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+  .hero .meta span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Score Cards */
+  .score-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 64px;
+  }
+  .score-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 20px; text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .score-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+  .score-card .score {
+    font-size: 2.2rem; font-weight: 800; margin-bottom: 4px;
+  }
+  .score-card .label { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* Summary Stats */
+  .stats-bar {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px;
+    padding: 20px 24px; border-radius: 16px;
+    background: var(--bg-card); border: 1px solid var(--border);
+  }
+  .stat-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+  .stat-item .num { font-weight: 700; font-size: 1.1rem; }
+  .stat-item .txt { color: var(--text-muted); }
+  .stat-divider { width: 1px; height: 24px; background: var(--border); }
+
+  /* Section */
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .section-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .section-title { font-size: 1.3rem; font-weight: 700; }
+  .section-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* Issue Cards */
+  .issue {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 14px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .issue:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+  .issue-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .severity {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 10px; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+  }
+  .sev-critical { background: var(--red-bg); color: var(--red); }
+  .sev-high { background: var(--orange-bg); color: var(--orange); }
+  .sev-medium { background: var(--yellow-bg); color: var(--yellow); }
+  .sev-low { background: var(--blue-bg); color: var(--blue); }
+  .sev-info { background: var(--purple-bg); color: var(--purple); }
+  .issue-title { font-weight: 600; font-size: 0.95rem; flex: 1; }
+  .issue-body { color: var(--text-muted); font-size: 0.88rem; margin-top: 6px; }
+  .issue-body code {
+    background: rgba(255,255,255,0.06); padding: 1px 6px;
+    border-radius: 4px; font-size: 0.82rem; color: var(--accent-light);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .issue-fix {
+    margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+    background: rgba(34,197,94,0.06); border-left: 3px solid var(--green);
+    font-size: 0.85rem; color: #86efac;
+  }
+  .issue-fix strong { color: #4ade80; }
+  .issue-file {
+    margin-top: 8px; font-size: 0.78rem; color: var(--text-dim);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  /* Feature List */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .feature-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 20px;
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: var(--border-hover); }
+  .feature-card .ft-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .feature-card .ft-icon { font-size: 1.2rem; }
+  .feature-card .ft-title { font-weight: 600; font-size: 0.92rem; }
+  .feature-card .ft-desc { font-size: 0.82rem; color: var(--text-muted); }
+  .feature-card .ft-tag {
+    display: inline-block; margin-top: 8px; padding: 2px 8px;
+    border-radius: 4px; font-size: 0.72rem; font-weight: 500;
+  }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { background: var(--bg-card); padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 12px 16px; border-top: 1px solid var(--border); }
+  tr:hover td { background: var(--bg-card); }
+
+  /* Progress bar */
+  .progress-bar { width: 100%; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .score-grid { grid-template-columns: repeat(2, 1fr); }
+    .feature-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.8rem; }
+  }
+
+  /* Misc */
+  .highlight { color: var(--accent-light); font-weight: 600; }
+  .red-text { color: var(--red); }
+  .green-text { color: var(--green); }
+  .orange-text { color: var(--orange); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag { padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <h1>莫的个人空间 · 全面审查报告</h1>
+  <p class="subtitle">React 18 + Vite 6 + Tailwind CSS + Zustand + JSON 文件存储后端</p>
+  <div class="meta">
+    <span><span class="dot" style="background:var(--green)"></span>41 个源文件</span>
+    <span><span class="dot" style="background:var(--accent)"></span>24 个后端文件</span>
+    <span><span class="dot" style="background:var(--orange)"></span>审查时间 2026-08-12</span>
+  </div>
+</div>
+
+<!-- ===== SCORE CARDS ===== -->
+<div class="score-grid">
+  <div class="score-card">
+    <div class="score" style="color:var(--red)">D+</div>
+    <div class="label">安全性</div>
+  </div>
+  <div class="score-card">
+    <div class="score" style="color:var(--orange)">B-</div>
+    <div class="label">性能</div>
+  </div>
+  <div class="score-card">
+    <div class="score" style="color:var(--yellow)">B</div>
+    <div class="label">代码质量</div>
+  </div>
+  <div class="score-card">
+    <div class="score" style="color:var(--green)">B+</div>
+    <div class="label">UI/UX 审美</div>
+  </div>
+</div>
+
+<!-- ===== SUMMARY STATS ===== -->
+<div class="stats-bar">
+  <div class="stat-item"><span class="num red-text">5</span><span class="txt">严重问题</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="num orange-text">8</span><span class="txt">高危问题</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="num" style="color:var(--yellow)">12</span><span class="txt">中等问题</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="num" style="color:var(--blue)">15</span><span class="txt">优化建议</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat-item"><span class="num green-text">10</span><span class="txt">可添加功能</span></div>
+</div>
+
+<!-- ===== SECTION 1: 严重问题 (Critical) ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--red-bg)">🔴</div>
+    <div>
+      <div class="section-title">严重问题（必须立即修复）</div>
+      <div class="section-desc">安全漏洞、数据丢失风险、功能完全不可用的缺陷</div>
+    </div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-critical">CRITICAL</span>
+      <span class="issue-title">XSS 漏洞：About 页面直接渲染未净化的 HTML</span>
+    </div>
+    <div class="issue-body">
+      <code>About.tsx</code> 使用 <code>dangerouslySetInnerHTML={{ __html: about.aboutContent }}</code> 直接渲染后端返回的 HTML 内容。后端 <code>aboutService.js</code> 没有任何 HTML 净化/转义逻辑。攻击者若通过管理后台注入恶意 <code>&lt;script&gt;</code> 标签，可窃取所有访问者的 <code>admin_token</code> 或执行任意操作。
+    </div>
+    <div class="issue-fix"><strong>修复方案：</strong>引入 <code>dompurify</code> 库，在渲染前净化 HTML：<code>dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(about.aboutContent) }}</code>。或在后端存储时进行净化。</div>
+    <div class="issue-file">src/pages/About.tsx:54</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-critical">CRITICAL</span>
+      <span class="issue-title">SSRF 漏洞：资源代理无域名白名单</span>
+    </div>
+    <div class="issue-body">
+      <code>vite.config.ts</code> 中的 <code>/res-proxy</code> 和 <code>/img-proxy</code> 端点接受任意 URL 参数并代理请求。攻击者可利用此代理访问内网服务（如 <code>http://localhost:3002/api/...</code>、<code>http://169.254.169.254/</code> 云元数据端点），造成服务器端请求伪造（SSRF）。
+    </div>
+    <div class="issue-fix"><strong>修复方案：</strong>添加域名白名单验证，只允许代理已知音乐/图片 CDN 域名。拒绝 <code>localhost</code>、<code>127.0.0.1</code>、<code>169.254.x.x</code>、<code>10.x.x.x</code>、<code>172.16-31.x.x</code>、<code>192.168.x.x</code> 等内网地址。</div>
+    <div class="issue-file">vite.config.ts:46-157</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-critical">CRITICAL</span>
+      <span class="issue-title">默认管理员密码 "admin123" 硬编码</span>
+    </div>
+    <div class="issue-body">
+      <code>authService.js</code> 中 <code>getAdminPassword()</code> 的最终 fallback 为 <code>'admin123'</code>。若部署时未设置 <code>ADMIN_PASSWORD</code> 环境变量且 <code>auth.json</code> 不存在，任何人都可以用 <code>admin123</code> 登录管理后台，执行文章/工具/语录的增删改。
+    </div>
+    <div class="issue-fix"><strong>修复方案：</strong>移除硬编码默认密码，首次启动时强制要求设置密码。或生成随机密码并打印到控制台。</div>
+    <div class="issue-file">server/authService.js:25</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-critical">CRITICAL</span>
+      <span class="issue-title">密码明文存储在 JSON 文件中</span>
+    </div>
+    <div class="issue-body">
+      <code>authService.js</code> 的 <code>changePassword()</code> 直接将新密码明文写入 <code>server/data/auth.json</code>。任何能读取服务器文件的人（或通过目录穿越漏洞）都能看到管理员密码。
+    </div>
+    <div class="issue-fix"><strong>修复方案：</strong>使用 <code>bcrypt</code> 或 <code>crypto.scrypt</code> 对密码进行哈希存储，永远不要存明文。比较密码时用 <code>bcrypt.compare()</code>。</div>
+    <div class="issue-file">server/authService.js:71</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-critical">CRITICAL</span>
+      <span class="issue-title">"瞬间/照片" 功能完全断裂 — 死代码</span>
+    </div>
+    <div class="issue-body">
+      CommandPalette 引用 <code>/moments</code> 路由，<code>Lightbox.tsx</code> 组件存在，<code>Photo</code> 类型定义存在，<code>fetchPhotos</code> 在 store 中实现，后端 <code>photoService.js</code> 也有完整 CRUD — 但<strong>没有 Moments 页面组件</strong>，<code>App.tsx</code> 路由表中也没有 <code>/moments</code> 路由。用户点击命令面板的"瞬间"会跳转到 404 页面。
+    </div>
+    <div class="issue-fix"><strong>修复方案：</strong>创建 <code>Moments.tsx</code> 页面（照片墙 + Lightbox），在 <code>App.tsx</code> 注册路由 <code>/moments</code>。或移除 CommandPalette 中的引用。</div>
+    <div class="issue-file">src/components/search/CommandPalette.tsx:32, src/App.tsx (缺少路由)</div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: 高危问题 (High) ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--orange-bg)">🟠</div>
+    <div>
+      <div class="section-title">高危问题（强烈建议修复）</div>
+      <div class="section-desc">影响安全性、性能、用户体验的重要问题</div>
+    </div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">无登录暴力破解保护</span>
+    </div>
+    <div class="issue-body">
+      <code>/api/auth/login</code> 没有任何速率限制或登录尝试次数限制。攻击者可以无限次尝试密码，配合弱密码（如默认的 admin123），几秒内即可暴力破解。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>添加失败计数器，同一 IP 5 次失败后锁定 15 分钟。使用 <code>express-rate-limit</code> 或自行实现简单的 Map 计数器。</div>
+    <div class="issue-file">server/apiMiddleware.js:121-130</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">无代码分割 — 首屏加载全部路由</span>
+    </div>
+    <div class="issue-body">
+      <code>App.tsx</code> 同步导入了所有 20+ 个页面组件（Home、Thoughts、ThoughtDetail、Quotes、Treasure、Timeline、Music、About、NotFound + 11 个 Admin 页面）。用户访问首页时会下载管理后台的所有代码，严重影响首屏加载速度。Recharts（~200KB）等重依赖也被同步引入。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>使用 <code>React.lazy()</code> + <code>&lt;Suspense&gt;</code> 对路由进行懒加载，Admin 路由单独打包 chunk。</div>
+    <div class="issue-file">src/App.tsx:1-27</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">无 Error Boundary — 组件崩溃白屏</span>
+    </div>
+    <div class="issue-body">
+      整个应用没有 Error Boundary。任何组件的运行时错误（如 API 返回异常数据导致 <code>.map is not a function</code>）都会导致整个页面白屏，用户只能手动刷新。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>在 <code>App.tsx</code> 的 <code>&lt;Routes&gt;</code> 外层包裹全局 Error Boundary，在 <code>&lt;Layout&gt;</code> 内包裹页面级 Error Boundary。提供友好的错误恢复 UI。</div>
+    <div class="issue-file">src/App.tsx</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">Canvas 动画持续运行 — 移动端电池杀手</span>
+    </div>
+    <div class="issue-body">
+      <code>FluidBackground</code> 和 <code>MouseEffect</code> 两个 Canvas 组件通过 <code>requestAnimationFrame</code> 持续运行渲染循环，<strong>即使页面不可见（切到后台标签页）也不停止</strong>。在移动设备上会严重消耗电池。同时 <code>MouseEffect</code> 的 <code>z-50</code> 层级覆盖在所有内容之上，虽然 <code>pointer-events:none</code>，但仍在每帧重绘。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>① 使用 <code>document.visibilitychange</code> 事件，页面不可见时暂停 rAF；② 添加 <code>prefers-reduced-motion</code> 检测，禁用动画；③ 在移动端关闭 <code>MouseEffect</code>（移动设备没有鼠标）。</div>
+    <div class="issue-file">src/components/effects/FluidBackground.tsx, src/components/effects/MouseEffect.tsx</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">Store 中所有错误被静默吞没</span>
+    </div>
+    <div class="issue-body">
+      <code>useStore.ts</code> 中所有 <code>catch</code> 块都是 <code>/* noop */</code>。API 失败时，用户看不到任何错误提示，页面只是显示空白或加载中。例如 <code>fetchArticles</code> 失败后 <code>articles</code> 保持空数组，用户只看到"暂无文章"，无法区分"真的没文章"和"网络错误"。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>在 store 中添加 <code>error</code> 字段，catch 块中 <code>set({ error: err.message })</code>。在 UI 中显示 toast/错误提示。</div>
+    <div class="issue-file">src/store/useStore.ts (全文所有 catch 块)</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">CORS 配置为通配符 <code>*</code></span>
+    </div>
+    <div class="issue-body">
+      <code>apiMiddleware.js</code> 和 <code>server/index.js</code> 中 <code>Access-Control-Allow-Origin: *</code>。任何网站都可以调用你的 API，包括恶意网站。结合 <code>Authorization</code> 头，可能导致 CSRF 攻击。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>将 CORS 限制为实际部署域名，或至少在开发/生产环境区分配置。</div>
+    <div class="issue-file">server/apiMiddleware.js:84, server/index.js:44</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">无 SEO 元数据 — 搜索引擎无法索引</span>
+    </div>
+    <div class="issue-body">
+      <code>index.html</code> 只有 <code>&lt;title&gt;</code> 和基础 viewport。无 <code>meta description</code>、无 Open Graph 标签、无 Twitter Card、无 <code>robots.txt</code>、无 <code>sitemap.xml</code>。文章详情页不动态更新标题。SPA 的所有页面在搜索引擎看来都是同一个空白页。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>① 添加 <code>react-helmet-async</code> 动态管理 meta；② 创建 <code>robots.txt</code> 和 <code>sitemap.xml</code>；③ 添加 OG 标签用于社交分享。</div>
+    <div class="issue-file">index.html, 全项目</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-high">HIGH</span>
+      <span class="issue-title">无数据备份机制 — JSON 文件可能损坏</span>
+    </div>
+    <div class="issue-body">
+      所有数据存储在 <code>server/data/*.json</code> 文件中。<code>writeJSON</code> 函数直接覆写文件。如果写入过程中服务器崩溃或断电，文件可能被截断为空或部分内容，导致<strong>所有数据永久丢失</strong>。多个并发写入也可能互相覆盖。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>① 写入时先写临时文件再原子重命名（<code>writeFile → rename</code>）；② 添加文件锁防止并发写入；③ 定期自动备份到 <code>data/backup/</code> 目录。</div>
+    <div class="issue-file">server/dataService.js:32-41</div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: 中等问题 (Medium) ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--yellow-bg)">🟡</div>
+    <div>
+      <div class="section-title">中等问题（建议修复）</div>
+      <div class="section-desc">影响代码维护性、用户体验中等问题</div>
+    </div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">大量重复的 <code>isDark ? ... : ...</code> 三元表达式</span>
+    </div>
+    <div class="issue-body">
+      几乎每个组件都有深度嵌套的 <code>isDark ? 'dark-class' : 'light-class'</code> 三元表达式。Tailwind 已配置 <code>darkMode: 'class'</code>，但完全未使用 <code>dark:</code> 前缀。这导致：① 代码量膨胀约 40%；② 阅读困难；③ 维护时需要同时改两处。例如 Header 组件一个 <code>className</code> 就有 6 层嵌套三元。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>全面改用 Tailwind <code>dark:</code> 变体，如 <code>text-gray-900 dark:text-white</code>。可移除 store 中的 <code>isDark</code> 字段，纯靠 CSS class 切换。</div>
+    <div class="issue-file">全项目几乎所有 .tsx 文件</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">重复代码：formatDate / slugify / getIconColor 等多处重复</span>
+    </div>
+    <div class="issue-body">
+      <code>formatDate</code> 在 <code>ThoughtDetail.tsx</code> 和 <code>ArticleCard.tsx</code> 中完全重复。<code>slugify</code> 在 <code>ThoughtDetail.tsx</code> 和 <code>TableOfContents.tsx</code> 中重复。<code>getIconColor</code> 和 <code>ICON_COLORS</code> 在 <code>Treasure.tsx</code> 和 <code>ToolDetailModal.tsx</code> 中重复。<code>getLocalClicks</code> 也在两处重复。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>提取到 <code>lib/utils.ts</code> 或单独的工具文件中，统一导入。</div>
+    <div class="issue-file">多处</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">页面背景风格不一致</span>
+    </div>
+    <div class="issue-body">
+      首页使用 FluidBackground 流体动画背景 + 友链区，视觉冲击力强。但其他页面（Quotes、Treasure、Timeline、Music、About）使用 <code>bg-gray-950</code> / <code>bg-gray-50</code> 纯色背景，与首页风格完全脱节。用户从首页点进子页面时会感到明显的视觉断裂。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>统一设计语言 — 要么首页也用纯色+微妙渐变，要么子页面也加微妙的动态背景（如轻量版渐变光晕）。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">无页面切换动画</span>
+    </div>
+    <div class="issue-body">
+      路由切换是瞬间的，没有任何过渡动画。用户在页面间导航时体验生硬，尤其是在从首页的沉浸式背景切换到子页面时。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>使用 <code>framer-motion</code> 的 <code>AnimatePresence</code> 或 CSS transition 添加页面进入/退出动画。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">音乐播放器缺少音量控制</span>
+    </div>
+    <div class="issue-body">
+      <code>Music.tsx</code> 的底部播放条有播放/暂停/下一首按钮和进度条，但<strong>没有音量控制</strong>，也没有上一首按钮。用户无法调节音量，这是音频播放器的基本功能。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>添加音量滑块（<code>audio.volume</code>），添加上一首按钮，显示播放模式（顺序/随机/单曲循环）。</div>
+    <div class="issue-file">src/pages/Music.tsx:323-390</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">无 Loading 骨架屏 — 加载体验差</span>
+    </div>
+    <div class="issue-body">
+      所有加载状态都只显示"加载中..."文字。文章列表、语录、工具等页面在数据加载时显示空白 + 文字，视觉上像是出错了。没有骨架屏来保持布局稳定。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>为 ArticleCard、Quotes、Treasure 等卡片式列表添加骨架屏组件（带有 pulse 动画的占位卡片）。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">articleService.js 单文件过大（30K+ tokens）</span>
+    </div>
+    <div class="issue-body">
+      <code>articleService.js</code> 包含文章 CRUD + 种子数据生成，文件超大。种子数据直接内嵌在服务文件中，包含大量示例文章内容，难以维护。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>将种子数据提取到 <code>server/data/seed-articles.json</code>，将服务逻辑拆分。</div>
+    <div class="issue-file">server/articleService.js</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">无测试 — 任何代码</span>
+    </div>
+    <div class="issue-body">
+      项目中没有任何测试文件，没有测试框架配置。无论是前端组件还是后端 API，都没有单元测试、集成测试或 E2E 测试。重构时没有回归保障。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>至少为关键路径添加测试：① 后端 API 用 Vitest/Node test；② 前端关键组件用 React Testing Library；③ E2E 用 Playwright。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">无 ESLint 配置文件</span>
+    </div>
+    <div class="issue-body">
+      <code>package.json</code> 有 <code>"lint": "eslint ."</code> 脚本，但项目根目录没有 <code>.eslintrc</code> 或 <code>eslint.config.js</code> 配置文件。ESLint 会使用默认配置，基本没有实际检查效果。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>添加 ESLint 配置（推荐 <code>@typescript-eslint</code> + <code>eslint-plugin-react-hooks</code>），配置 pre-commit hook（husky + lint-staged）。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">静态文件服务无缓存头</span>
+    </div>
+    <div class="issue-body">
+      <code>server/index.js</code> 的 <code>serveStatic</code> 函数不设置 <code>Cache-Control</code> 头。每次请求都会重新读取文件，无法利用浏览器缓存。Vite 构建的文件名带 hash，可以安全地长期缓存。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>为 <code>.js</code>、<code>.css</code>、<code>.woff2</code> 等设置 <code>Cache-Control: public, max-age=31536000, immutable</code>，为 <code>.html</code> 设置 <code>no-cache</code>。</div>
+    <div class="issue-file">server/index.js:79-84</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">后端 API 无输入验证</span>
+    </div>
+    <div class="issue-body">
+      <code>apiMiddleware.js</code> 中所有 POST/PUT 端点直接将 <code>readBody(req)</code> 的结果传给服务层，没有验证必填字段、类型、长度。例如创建文章时可以提交空标题、超长内容、非法 category_id 等。友链提交没有 URL 格式验证。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>添加输入验证中间件，或使用 Zod/Yup schema 验证。至少验证必填字段、字符串长度、URL 格式。</div>
+    <div class="issue-file">server/apiMiddleware.js (全文)</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-medium">MEDIUM</span>
+      <span class="issue-title">文章浏览量不增加 — getArticleById 不更新 views</span>
+    </div>
+    <div class="issue-body">
+      <code>articleService.js</code> 的 <code>getArticleById</code> 只是读取文章数据返回，<strong>没有递增 <code>views</code> 字段</strong>。文章详情页虽然显示"X 次阅读"，但这个数字永远是 0（或种子数据的初始值）。
+    </div>
+    <div class="issue-fix"><strong>修复：</strong>在 <code>getArticleById</code> 中调用 <code>writeJSON</code> 更新 <code>views + 1</code>，或添加单独的 <code>incrementViews</code> 方法。</div>
+    <div class="issue-file">server/articleService.js:61-64</div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: 优化建议 (Low) ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--blue-bg)">🔵</div>
+    <div>
+      <div class="section-title">优化建议（锦上添花）</div>
+      <div class="section-desc">提升性能、可维护性、开发体验的建议</div>
+    </div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">未使用 <code>prefers-reduced-motion</code></span>
+    </div>
+    <div class="issue-body">
+      对动画敏感的用户（如前庭功能障碍患者）无法禁用 Canvas 动画和 CSS 过渡。OS 层面设置了"减少动态效果"但项目完全忽略。
+    </div>
+    <div class="issue-fix">在 CSS 中添加 <code>@media (prefers-reduced-motion: reduce)</code> 规则，在 JS 中检测并禁用 rAF 动画。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无 PWA / Service Worker</span>
+    </div>
+    <div class="issue-body">
+      无 <code>manifest.json</code>，无 Service Worker。移动端用户无法"添加到主屏幕"，无离线访问能力。个人博客网站特别适合 PWA 化。
+    </div>
+    <div class="issue-fix">使用 <code>vite-plugin-pwa</code> 添加 PWA 支持，自动生成 manifest 和 SW。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无"返回顶部"按钮</span>
+    </div>
+    <div class="issue-body">
+      文章列表、语录、工具箱等页面内容较长，用户滚动到底部后需要手动滑回顶部。虽然 <code>html</code> 有 <code>scroll-behavior: smooth</code>，但没有返回顶部按钮。
+    </div>
+    <div class="issue-fix">添加浮动"返回顶部"按钮，滚动超过 500px 时显示。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">CommandPalette 未预加载文章/工具数据</span>
+    </div>
+    <div class="issue-body">
+      命令面板搜索文章和工具时依赖 store 中已有的数据。如果用户直接打开命令面板（未先访问文章/工具页），搜索结果为空。
+    </div>
+    <div class="issue-fix">在命令面板打开时，如果 articles/tools 为空，自动 fetch。</div>
+    <div class="issue-file">src/components/search/CommandPalette.tsx</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">Header 和 Footer 重复请求站点设置</span>
+    </div>
+    <div class="issue-body">
+      <code>Header.tsx</code> 和 <code>Footer.tsx</code> 各自在 <code>useEffect</code> 中调用 <code>fetchSiteSettings()</code>，导致同一数据被请求两次。
+    </div>
+    <div class="issue-fix">在 <code>App.tsx</code> 或 <code>Layout.tsx</code> 中统一调用一次，或添加 store 缓存判断 <code>if (!siteSettings) fetch()</code>。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无 <code>.env.example</code> 环境变量文档</span>
+    </div>
+    <div class="issue-body">
+      项目使用 <code>process.env.ADMIN_PASSWORD</code> 和 <code>process.env.PORT</code>，但没有 <code>.env.example</code> 文件。新开发者不知道需要配置哪些环境变量。
+    </div>
+    <div class="issue-fix">创建 <code>.env.example</code> 列出所有环境变量及说明。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">移动端导航菜单无动画</span>
+    </div>
+    <div class="issue-body">
+      Header 的移动端下拉菜单用 <code>{mobileOpen && ...}</code> 条件渲染，出现/消失都是瞬间的，没有滑入/滑出动画。
+    </div>
+    <div class="issue-fix">使用 CSS transition 或 <code>max-height</code> 动画实现平滑展开。</div>
+    <div class="issue-file">src/components/layout/Header.tsx:152-204</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无 Dockerfile / CI-CD 配置</span>
+    </div>
+    <div class="issue-body">
+      无 Dockerfile、无 GitHub Actions、无部署脚本。每次部署需要手动操作。
+    </div>
+    <div class="issue-fix">添加 Dockerfile + docker-compose.yml，配置 GitHub Actions CI（lint + build + deploy）。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">文章详情页 TOC 在移动端不可见</span>
+    </div>
+    <div class="issue-body">
+      <code>TableOfContents</code> 使用 <code>hidden lg:block</code>，在移动端和平板（&lt;1024px）完全不显示。长文章在移动端没有导航辅助。
+    </div>
+    <div class="issue-fix">移动端用底部浮动按钮展开 TOC，或用 <code>&lt;details&gt;</code> 折叠组件。</div>
+    <div class="issue-file">src/pages/ThoughtDetail.tsx:195</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无健康检查端点</span>
+    </div>
+    <div class="issue-body">
+      后端服务器没有 <code>/api/health</code> 或 <code>/healthz</code> 端点。无法被 Docker/负载均衡器/监控工具探活。
+    </div>
+    <div class="issue-fix">添加 <code>GET /api/health</code> 返回 <code>{ status: "ok", uptime: ... }</code>。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无 <code>.gitignore</code> 检查 — 数据文件可能被提交</span>
+    </div>
+    <div class="issue-body">
+      <code>server/data/auth.json</code>（含密码哈希）和用户数据文件可能被提交到 Git 仓库，造成数据泄露。
+    </div>
+    <div class="issue-fix">确保 <code>.gitignore</code> 包含 <code>server/data/auth.json</code>、<code>server/data/*.json</code>（保留示例数据）。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">主题切换无过渡动画</span>
+    </div>
+    <div class="issue-body">
+      切换深色/浅色主题时，<code>body</code> 背景色瞬间变化，所有元素的颜色同时跳变，视觉上很突兀。
+    </div>
+    <div class="issue-fix">给所有颜色属性添加 <code>transition-colors duration-300</code>，或使用 View Transitions API。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">无 skip-to-content 链接 — 无障碍缺失</span>
+    </div>
+    <div class="issue-body">
+      屏幕阅读器用户每次进入页面都需要从头导航 Header 中的所有链接。没有"跳到主要内容"的快捷链接。
+    </div>
+    <div class="issue-fix">在 Layout 最顶部添加 <code>&lt;a href="#main" class="sr-only focus:not-sr-only"&gt;跳到主要内容&lt;/a&gt;</code>。</div>
+  </div>
+
+  <div class="issue">
+    <div class="issue-header">
+      <span class="severity sev-low">OPTIMIZE</span>
+      <span class="issue-title">Recharts 引入但未使用</span>
+    </div>
+    <div class="issue-body">
+      <code>package.json</code> 依赖 <code>recharts</code>（~200KB gzip），但项目中没有任何图表组件使用它。Admin Dashboard 可能计划使用但未实现。
+    </div>
+    <div class="issue-fix">移除未使用的依赖，或在 Dashboard 中实现数据统计图表。</div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: 可添加的新功能 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--green-bg)">🟢</div>
+    <div>
+      <div class="section-title">可添加的新功能</div>
+      <div class="section-desc">让项目从"能用"到"好用"的功能建议</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">💬</span>
+        <span class="ft-title">文章评论系统</span>
+      </div>
+      <div class="ft-desc">为文章添加评论功能，可集成 Disqus/Giscus（GitHub Discussions）或自建简单评论。增加读者互动。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--green-bg);color:var(--green)">高价值</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">⏱️</span>
+        <span class="ft-title">文章阅读时间估算</span>
+      </div>
+      <div class="ft-desc">根据文章字数自动计算阅读时间（中文 ~300字/分钟，英文 ~200词/分钟），在封面和详情页显示。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--blue-bg);color:var(--blue)">易实现</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">🔖</span>
+        <span class="ft-title">文章标签筛选</span>
+      </div>
+      <div class="ft-desc">Article 类型已有 tags 字段，但 UI 没有标签筛选/标签云。添加标签筛选可让读者更快找到相关内容。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--blue-bg);color:var(--blue)">易实现</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">📡</span>
+        <span class="ft-title">RSS 订阅源</span>
+      </div>
+      <div class="ft-desc">生成 RSS/Atom feed（<code>/feed.xml</code> 或 <code>/api/rss</code>），让读者通过 RSS 阅读器订阅新文章通知。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--green-bg);color:var(--green)">高价值</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">🔗</span>
+        <span class="ft-title">文章社交分享</span>
+      </div>
+      <div class="ft-desc">在文章详情页添加分享按钮（微信/微博/Twitter/复制链接），便于内容传播。可配合 OG 标签预览。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--purple-bg);color:var(--purple)">中等</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">📸</span>
+        <span class="ft-title">瞬间/照片墙页面</span>
+      </div>
+      <div class="ft-desc">补全已断裂的 Moments 功能 — 瀑布流照片墙 + Lightbox 大图查看 + 按年份分组。后端 API 已就绪。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--red-bg);color:var(--red)">必须修复</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">🔍</span>
+        <span class="ft-title">全文搜索</span>
+      </div>
+      <div class="ft-desc">当前文章搜索只在服务端做字符串匹配，无相关性排序。可集成 Fuse.js 做前端模糊搜索，或后端用 MiniSearch 做全文索引。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--purple-bg);color:var(--purple)">中等</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">🌙</span>
+        <span class="ft-title">主题自动跟随系统</span>
+      </div>
+      <div class="ft-desc">Settings 页面已有"跟随系统"选项，但实际未实现。检测 <code>prefers-color-scheme</code> 并监听变化自动切换。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--blue-bg);color:var(--blue)">易实现</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">📊</span>
+        <span class="ft-title">Dashboard 数据统计图表</span>
+      </div>
+      <div class="ft-desc">Admin Dashboard 当前可能只有简单数据列表。利用已引入的 Recharts 绘制文章发布趋势、访问量、工具点击量等图表。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--purple-bg);color:var(--purple)">中等</span></div>
+    </div>
+
+    <div class="feature-card">
+      <div class="ft-header">
+        <span class="ft-icon">📤</span>
+        <span class="ft-title">数据导入/导出</span>
+      </div>
+      <div class="ft-desc">在 Admin 设置中添加一键导出所有数据为 JSON / 导入恢复功能。防止数据丢失，便于迁移。</div>
+      <div class="tag-row"><span class="tag" style="background:var(--green-bg);color:var(--green)">高价值</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: 技术栈评估 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--purple-bg)">🛠️</div>
+    <div>
+      <div class="section-title">技术栈评估</div>
+      <div class="section-desc">当前技术选型的优劣势分析</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>技术</th>
+          <th>版本</th>
+          <th>评价</th>
+          <th>建议</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>React</td>
+          <td>18.3</td>
+          <td style="color:var(--green)">✅ 稳定成熟</td>
+          <td>可考虑升级到 React 19（Actions, useOptimistic）</td>
+        </tr>
+        <tr>
+          <td>Vite</td>
+          <td>6.3</td>
+          <td style="color:var(--green)">✅ 最新版</td>
+          <td>利用 Vite 的环境变量 API 优化配置</td>
+        </tr>
+        <tr>
+          <td>TypeScript</td>
+          <td>5.8</td>
+          <td style="color:var(--green)">✅ 类型安全</td>
+          <td>后端也应使用 TS（当前为纯 JS）</td>
+        </tr>
+        <tr>
+          <td>Tailwind CSS</td>
+          <td>3.4</td>
+          <td style="color:var(--orange)">⚠️ 未充分利用</td>
+          <td>大量 isDark 三元表达式，应改用 dark: 变体</td>
+        </tr>
+        <tr>
+          <td>Zustand</td>
+          <td>5.0</td>
+          <td style="color:var(--green)">✅ 轻量高效</td>
+          <td>添加错误处理状态</td>
+        </tr>
+        <tr>
+          <td>React Router</td>
+          <td>7.18</td>
+          <td style="color:var(--green)">✅ 最新版</td>
+          <td>利用 v7 的 loader/action 模式优化数据获取</td>
+        </tr>
+        <tr>
+          <td>JSON 文件存储</td>
+          <td>—</td>
+          <td style="color:var(--orange)">⚠️ 不适合生产</td>
+          <td>低流量个人站可接受，但需添加原子写入和备份</td>
+        </tr>
+        <tr>
+          <td>Recharts</td>
+          <td>2.12</td>
+          <td style="color:var(--red)">❌ 未使用但引入</td>
+          <td>移除或在 Dashboard 中使用</td>
+        </tr>
+        <tr>
+          <td>lucide-react</td>
+          <td>0.511</td>
+          <td style="color:var(--green)">✅ 图标丰富</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 7: 优先级路线图 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--accent);opacity:0.2">🗺️</div>
+    <div>
+      <div class="section-title">修复优先级路线图</div>
+      <div class="section-desc">建议按以下顺序逐步修复和优化</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>优先级</th>
+          <th>任务</th>
+          <th>预估工作量</th>
+          <th>影响范围</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--red-bg)">
+          <td style="color:var(--red);font-weight:700">P0</td>
+          <td>修复 XSS 漏洞（About dangerouslySetInnerHTML）</td>
+          <td>30 分钟</td>
+          <td>安全</td>
+        </tr>
+        <tr style="background:var(--red-bg)">
+          <td style="color:var(--red);font-weight:700">P0</td>
+          <td>移除默认密码 admin123，密码 bcrypt 哈希存储</td>
+          <td>1 小时</td>
+          <td>安全</td>
+        </tr>
+        <tr style="background:var(--red-bg)">
+          <td style="color:var(--red);font-weight:700">P0</td>
+          <td>修复 SSRF：代理端点添加域名白名单</td>
+          <td>1 小时</td>
+          <td>安全</td>
+        </tr>
+        <tr style="background:var(--red-bg)">
+          <td style="color:var(--red);font-weight:700">P0</td>
+          <td>补全 Moments 页面或移除死代码引用</td>
+          <td>2-4 小时</td>
+          <td>功能完整性</td>
+        </tr>
+        <tr style="background:var(--orange-bg)">
+          <td style="color:var(--orange);font-weight:700">P1</td>
+          <td>添加 Error Boundary + 路由懒加载</td>
+          <td>1 小时</td>
+          <td>性能 + 稳定性</td>
+        </tr>
+        <tr style="background:var(--orange-bg)">
+          <td style="color:var(--orange);font-weight:700">P1</td>
+          <td>登录暴力破解保护 + CORS 域名限制</td>
+          <td>1 小时</td>
+          <td>安全</td>
+        </tr>
+        <tr style="background:var(--orange-bg)">
+          <td style="color:var(--orange);font-weight:700">P1</td>
+          <td>JSON 原子写入 + 数据备份机制</td>
+          <td>1 小时</td>
+          <td>数据安全</td>
+        </tr>
+        <tr style="background:var(--orange-bg)">
+          <td style="color:var(--orange);font-weight:700">P1</td>
+          <td>SEO 元数据 + OG 标签 + sitemap</td>
+          <td>2 小时</td>
+          <td>SEO</td>
+        </tr>
+        <tr style="background:var(--yellow-bg)">
+          <td style="color:var(--yellow);font-weight:700">P2</td>
+          <td>isDark 三元 → Tailwind dark: 变体重构</td>
+          <td>4-6 小时</td>
+          <td>代码质量</td>
+        </tr>
+        <tr style="background:var(--yellow-bg)">
+          <td style="color:var(--yellow);font-weight:700">P2</td>
+          <td>Canvas 动画性能优化（可见性检测 + reduced-motion）</td>
+          <td>1 小时</td>
+          <td>性能</td>
+        </tr>
+        <tr style="background:var(--yellow-bg)">
+          <td style="color:var(--yellow);font-weight:700">P2</td>
+          <td>Store 错误处理 + Toast 通知系统</td>
+          <td>2 小时</td>
+          <td>UX</td>
+        </tr>
+        <tr style="background:var(--yellow-bg)">
+          <td style="color:var(--yellow);font-weight:700">P2</td>
+          <td>骨架屏 + 页面切换动画</td>
+          <td>3 小时</td>
+          <td>UX</td>
+        </tr>
+        <tr style="background:var(--blue-bg)">
+          <td style="color:var(--blue);font-weight:700">P3</td>
+          <td>ESLint + 测试框架 + CI/CD</td>
+          <td>4 小时</td>
+          <td>工程化</td>
+        </tr>
+        <tr style="background:var(--blue-bg)">
+          <td style="color:var(--blue);font-weight:700">P3</td>
+          <td>PWA + RSS + 评论系统等新功能</td>
+          <td>8+ 小时</td>
+          <td>功能增强</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 8: 做得好的地方 ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--green-bg)">✅</div>
+    <div>
+      <div class="section-title">做得好的地方</div>
+      <div class="section-desc">项目中的亮点和优秀实践</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">🎨</span><span class="ft-title">视觉设计有品味</span></div>
+      <div class="ft-desc">首页流体背景 + 鼠标粒子效果 + 唱片旋转动画，视觉冲击力强，配色考究（暗色主题深紫/深蓝/青色渐变，亮色粉色/橙色暖色调）。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">🏗️</span><span class="ft-title">架构分层清晰</span></div>
+      <div class="ft-desc">前端 store/services/types/components/pages 分层合理，后端 apiMiddleware → service → dataService 三层架构，职责分离明确。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">⌨️</span><span class="ft-title">CommandPalette 快捷搜索</span></div>
+      <div class="ft-desc">Cmd+K 命令面板设计，支持键盘导航（上下箭头 + Enter），是个人站少见的高级交互。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">📱</span><span class="ft-title">响应式设计完善</span></div>
+      <div class="ft-desc">各页面都有 sm/md/lg/xl 断点适配，移动端导航有汉堡菜单，Admin 后台有侧边栏滑出。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">🔐</span><span class="ft-title">API 鉴权分层</span></div>
+      <div class="ft-desc">公开接口（GET 文章/工具/语录等）不需要登录，管理接口（POST/PUT/DELETE）需要 token，<code>requireAuth</code> 守卫设计合理。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">🎵</span><span class="ft-title">音乐播放器体验完整</span></div>
+      <div class="ft-desc">播放/暂停/进度条/下一首/错误自动跳过/封面主色提取动态背景 — 作为一个个人站的音乐模块，体验相当完整。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">📝</span><span class="ft-title">文章阅读体验</span></div>
+      <div class="ft-desc">阅读进度条 + 自动目录（TOC）+ IntersectionObserver 滚动高亮 + 相关文章推荐 — 博客核心体验齐全。</div>
+    </div>
+    <div class="feature-card">
+      <div class="ft-header"><span class="ft-icon">🔒</span><span class="ft-title">Vite HMR 状态持久化</span></div>
+      <div class="ft-desc">Zustand store 做了 HMR dispose/data 处理，热更新时不会丢失状态，开发体验好。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div style="text-align:center; padding: 48px 0 0; border-top: 1px solid var(--border); margin-top: 48px;">
+  <p style="color: var(--text-dim); font-size: 0.82rem;">
+    审查范围：41 个前端源文件 + 24 个后端文件 + 配置文件<br>
+    审查维度：安全性 / 性能 / 代码质量 / UI/UX / 可访问性 / 工程化 / 功能完整性<br>
+    生成时间：2026-08-12
+  </p>
+</div>
+
+</div>
+</body>
+</html>

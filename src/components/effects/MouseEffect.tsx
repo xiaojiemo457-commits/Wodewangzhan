@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react';
-
-interface MouseEffectProps {
-  isDark: boolean;
-}
+import { useStore } from '@/store/useStore';
 
 interface Particle {
   x: number;
@@ -33,7 +30,8 @@ function pickColor(isDark: boolean): string {
   return palette[Math.floor(Math.random() * palette.length)];
 }
 
-export default function MouseEffect({ isDark }: MouseEffectProps) {
+export default function MouseEffect() {
+  const isDark = useStore((s) => s.isDark);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const ripplesRef = useRef<Ripple[]>([]);
@@ -54,6 +52,7 @@ export default function MouseEffect({ isDark }: MouseEffectProps) {
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let running = false;
 
     const resize = () => {
       width = window.innerWidth;
@@ -184,17 +183,39 @@ export default function MouseEffect({ isDark }: MouseEffectProps) {
       rafRef.current = requestAnimationFrame(render);
     };
 
+    // 页面隐藏时暂停动画，节省 CPU/电量
+    const onVisibility = () => {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(rafRef.current);
+      } else if (!running) {
+        running = true;
+        rafRef.current = requestAnimationFrame(render);
+      }
+    };
+
+    // 尊重系统「减弱动态效果」：完全禁用粒子特效
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     resize();
-    render();
+    if (prefersReduced) {
+      running = false;
+    } else {
+      running = true;
+      render();
+    }
     window.addEventListener('resize', resize);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('click', onClick);
+    document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
+      running = false;
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('click', onClick);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 

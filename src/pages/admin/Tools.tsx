@@ -13,7 +13,7 @@ const emptyForm: Partial<Tool> = {
 };
 
 export default function AdminTools() {
-  const { tools, fetchTools } = useStore();
+  const tools = useStore((s) => s.tools);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Tool | null>(null);
   const [form, setForm] = useState<Partial<Tool>>(emptyForm);
@@ -22,7 +22,7 @@ export default function AdminTools() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    fetchTools();
+    useStore.getState().fetchTools();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -48,7 +48,7 @@ export default function AdminTools() {
       } else {
         await createTool(form);
       }
-      await fetchTools();
+      await useStore.getState().fetchTools();
       setModalOpen(false);
     } catch {
       alert('保存失败');
@@ -61,7 +61,7 @@ export default function AdminTools() {
     setDeleting(true);
     try {
       await deleteTool(id);
-      await fetchTools();
+      await useStore.getState().fetchTools();
       setConfirmId(null);
     } catch {
       /* noop */

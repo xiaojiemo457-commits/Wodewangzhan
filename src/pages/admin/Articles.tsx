@@ -6,12 +6,13 @@ import { deleteArticle } from '@/services/api';
 import { Article } from '@/types';
 
 export default function AdminArticles() {
-  const { articles, fetchArticles, categories } = useStore();
+  const articles = useStore((s) => s.articles);
+  const categories = useStore((s) => s.categories);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    fetchArticles();
+    useStore.getState().fetchArticles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -22,7 +23,7 @@ export default function AdminArticles() {
     setDeleting(true);
     try {
       await deleteArticle(article.id);
-      await fetchArticles();
+      await useStore.getState().fetchArticles();
       setConfirmId(null);
     } catch {
       /* noop */

@@ -20,7 +20,8 @@ function proxyAudioUrl(rawUrl: string): string {
 }
 
 export default function Music() {
-  const { isDark, musicEntries, fetchMusic } = useStore();
+  const isDark = useStore((s) => s.isDark);
+  const musicEntries = useStore((s) => s.musicEntries);
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -38,7 +39,7 @@ export default function Music() {
   const skipOnErrorRef = useRef(false);
 
   useEffect(() => {
-    fetchMusic();
+    useStore.getState().fetchMusic();
   }, []);
 
   // 提取封面主色
@@ -70,12 +71,11 @@ export default function Music() {
 
   const bgStyle = useMemo(() => {
     if (!dominantColor) return undefined;
-    const c = rgbToCss(dominantColor, isDark ? 0.25 : 0.18);
-    const c2 = rgbToCss(dominantColor, isDark ? 0.05 : 0.04);
-    if (isDark) {
-      return { background: `radial-gradient(120% 80% at 30% 0%, ${c} 0%, ${c2} 45%, #050505 100%)` };
-    }
-    return { background: `radial-gradient(120% 80% at 30% 0%, ${c} 0%, ${c2} 45%, #fafafa 100%)` };
+    const c = rgbToCss(dominantColor, 0.2);
+    const c2 = rgbToCss(dominantColor, 0.05);
+    return {
+      background: `radial-gradient(120% 80% at 30% 0%, ${c} 0%, ${c2} 45%, ${isDark ? '#050505' : '#fafafa'} 100%)`,
+    };
   }, [dominantColor, isDark]);
 
   // 播放指定歌曲
@@ -189,7 +189,7 @@ export default function Music() {
 
   return (
     <div
-      className={cn('min-h-screen pb-32 transition-colors bg-color-transition', isDark ? 'text-gray-100' : 'text-gray-900')}
+      className="min-h-screen pb-32 transition-colors bg-color-transition text-gray-900 dark:text-gray-100"
       style={bgStyle}
     >
       <audio ref={audioRef} preload="auto" />
@@ -201,27 +201,22 @@ export default function Music() {
             <Disc3 className={cn('w-7 h-7', isPlaying && 'vinyl-spinning')} />
             <h1 className="text-3xl font-bold tracking-tight">音乐日记</h1>
           </div>
-          <p className={cn('text-sm', isDark ? 'text-gray-400' : 'text-gray-500')}>每一首歌都是一段记忆 · 点击封面开始播放</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">每一首歌都是一段记忆 · 点击封面开始播放</p>
         </div>
 
         {/* Search */}
         <div className="relative mb-8">
-          <Search className={cn('absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5', isDark ? 'text-gray-500' : 'text-gray-400')} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="搜索歌曲、歌手或日记..."
-            className={cn(
-              'w-full pl-12 pr-4 py-3 rounded-xl border outline-none transition-colors',
-              isDark
-                ? 'bg-gray-900/70 border-gray-800 text-gray-100 placeholder-gray-500 focus:border-sky-500 backdrop-blur-sm'
-                : 'bg-white/70 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-sky-500 backdrop-blur-sm'
-            )}
+            className="w-full pl-12 pr-4 py-3 rounded-xl border outline-none transition-colors bg-white/70 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-sky-500 backdrop-blur-sm dark:bg-gray-900/70 dark:border-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-sky-500"
           />
         </div>
 
         {filtered.length === 0 ? (
-          <div className={cn('text-center py-20', isDark ? 'text-gray-500' : 'text-gray-400')}>暂无音乐日记</div>
+          <div className="text-center py-20 text-gray-400 dark:text-gray-500">暂无音乐日记</div>
         ) : (
           <div className="space-y-4">
             {filtered.map((m, idx) => {
@@ -237,9 +232,7 @@ export default function Music() {
                   className={cn(
                     'animate-fade-in-up rounded-2xl p-4 border cursor-pointer transition-all duration-300',
                     isCurrent && 'ring-2 ring-sky-500/60 shadow-lg shadow-sky-500/10',
-                    isDark
-                      ? 'bg-gray-900/60 border-gray-800 hover:border-gray-700 backdrop-blur-md'
-                      : 'bg-white/70 border-gray-100 hover:border-gray-300 backdrop-blur-md'
+                    'bg-white/70 border-gray-100 hover:border-gray-300 backdrop-blur-md dark:bg-gray-900/60 dark:border-gray-800 dark:hover:border-gray-700'
                   )}
                 >
                   <div className="flex gap-4">
@@ -253,7 +246,7 @@ export default function Music() {
                           loading="lazy"
                           className="absolute inset-[6px] rounded-full object-cover"
                         />
-                        <div className={cn('absolute inset-0 m-auto w-4 h-4 rounded-full', isDark ? 'bg-gray-950' : 'bg-gray-800')} />
+                        <div className="absolute inset-0 m-auto w-4 h-4 rounded-full bg-gray-800 dark:bg-gray-950" />
                         <div className="absolute inset-0 m-auto w-1.5 h-1.5 rounded-full bg-sky-500" />
                       </div>
                       <button
@@ -280,18 +273,18 @@ export default function Music() {
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <h3 className="font-semibold truncate text-lg">{m.title}</h3>
-                          <p className={cn('text-sm truncate mt-0.5', isDark ? 'text-gray-400' : 'text-gray-500')}>{m.artist}</p>
+                          <p className="text-sm truncate mt-0.5 text-gray-500 dark:text-gray-400">{m.artist}</p>
                         </div>
-                        <ChevronDown className={cn('w-4 h-4 mt-1 shrink-0 transition-transform', expanded ? 'rotate-180' : '', isDark ? 'text-gray-400' : 'text-gray-400')} />
+                        <ChevronDown className={cn('w-4 h-4 mt-1 shrink-0 transition-transform text-gray-400', expanded && 'rotate-180')} />
                       </div>
 
                       <div className={cn('overflow-hidden transition-all duration-300', expanded ? 'max-h-96' : 'max-h-12')}>
-                        <p className={cn('text-sm mt-2 leading-relaxed diary-fade', isDark ? 'text-gray-300' : 'text-gray-600', !expanded && 'line-clamp-2')}>
+                        <p className={cn('text-sm mt-2 leading-relaxed diary-fade text-gray-600 dark:text-gray-300', !expanded && 'line-clamp-2')}>
                           {m.diary}
                         </p>
                       </div>
 
-                      <div className={cn('flex items-center gap-1 text-xs mt-auto pt-2', isDark ? 'text-gray-500' : 'text-gray-400')}>
+                      <div className="flex items-center gap-1 text-xs mt-auto pt-2 text-gray-400 dark:text-gray-500">
                         <Calendar className="w-3 h-3" />
                         <span>{m.date}</span>
                         {isCurrent && isPlaying && (
@@ -323,14 +316,11 @@ export default function Music() {
       {playingMusic && (
         <div className="fixed bottom-0 left-0 right-0 z-40 animate-fade-in-up">
           <div className="mx-auto max-w-4xl mb-4 px-4">
-            <div className={cn(
-              'rounded-2xl border shadow-2xl backdrop-blur-xl overflow-hidden',
-              isDark ? 'bg-gray-900/85 border-gray-700' : 'bg-white/85 border-gray-200'
-            )}>
+            <div className="rounded-2xl border shadow-2xl backdrop-blur-xl overflow-hidden bg-white/85 border-gray-200 dark:bg-gray-900/85 dark:border-gray-700">
               {/* 进度条 */}
               <div
                 onClick={handleSeek}
-                className={cn('h-1.5 cursor-pointer group relative', isDark ? 'bg-gray-800' : 'bg-gray-100')}
+                className="h-1.5 cursor-pointer group relative bg-gray-100 dark:bg-gray-800"
               >
                 <div
                   className="absolute inset-y-0 left-0 bg-sky-500 transition-[width] duration-150"
@@ -353,7 +343,7 @@ export default function Music() {
                 {/* 标题 */}
                 <div className="min-w-0 flex-1">
                   <p className="font-medium truncate">{playingMusic.title}</p>
-                  <p className={cn('text-xs truncate', isDark ? 'text-gray-400' : 'text-gray-500')}>
+                  <p className="text-xs truncate text-gray-500 dark:text-gray-400">
                     {playingMusic.artist} · {formatTime(currentTime)} / {formatTime(duration)}
                   </p>
                 </div>
@@ -362,10 +352,7 @@ export default function Music() {
                 <button
                   onClick={playNext}
                   aria-label="下一首"
-                  className={cn(
-                    'w-9 h-9 rounded-full flex items-center justify-center transition-colors',
-                    isDark ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-600'
-                  )}
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-colors hover:bg-gray-100 text-gray-600 dark:hover:bg-gray-800 dark:text-gray-300"
                 >
                   <SkipForward className="w-4 h-4" />
                 </button>

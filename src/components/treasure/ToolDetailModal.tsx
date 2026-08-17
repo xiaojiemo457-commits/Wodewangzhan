@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { X, ExternalLink, MousePointerClick } from 'lucide-react';
 import { Tool } from '../../types';
 import { cn } from '../../lib/utils';
-import { useStore } from '../../store/useStore';
 
 interface Props {
   tool: Tool | null;
@@ -31,8 +30,6 @@ const getLocalClicks = (id: string): number => {
 };
 
 export default function ToolDetailModal({ tool, onClose, onVisit }: Props) {
-  const { isDark } = useStore();
-
   useEffect(() => {
     if (!tool) return;
     const onKey = (e: KeyboardEvent) => {
@@ -57,18 +54,12 @@ export default function ToolDetailModal({ tool, onClose, onVisit }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={cn(
-          'relative w-full max-w-lg rounded-2xl border p-6 shadow-2xl',
-          isDark ? 'bg-gray-900 border-gray-800 text-gray-100' : 'bg-white border-gray-200 text-gray-900'
-        )}
+        className="relative w-full max-w-lg rounded-2xl border p-6 shadow-2xl bg-white border-gray-200 text-gray-900 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-100"
       >
         <button
           onClick={onClose}
           aria-label="关闭"
-          className={cn(
-            'absolute top-4 right-4 p-1.5 rounded-lg transition-colors',
-            isDark ? 'text-gray-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'
-          )}
+          className="absolute top-4 right-4 p-1.5 rounded-lg transition-colors text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
         >
           <X className="w-5 h-5" />
         </button>
@@ -79,17 +70,17 @@ export default function ToolDetailModal({ tool, onClose, onVisit }: Props) {
           </div>
           <div className="min-w-0">
             <h2 className="text-xl font-bold truncate">{tool.name}</h2>
-            <span className={cn('inline-block mt-1 text-xs px-2 py-0.5 rounded-full', isDark ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-500')}>
+            <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
               {tool.category}
             </span>
           </div>
         </div>
 
-        <p className={cn('text-sm leading-relaxed mb-4', isDark ? 'text-gray-300' : 'text-gray-600')}>
+        <p className="text-sm leading-relaxed mb-4 text-gray-600 dark:text-gray-300">
           {tool.description}
         </p>
 
-        <div className={cn('flex items-center gap-2 text-sm mb-6', isDark ? 'text-gray-400' : 'text-gray-500')}>
+        <div className="flex items-center gap-2 text-sm mb-6 text-gray-500 dark:text-gray-400">
           <MousePointerClick className="w-4 h-4" />
           <span>访问次数：{clickCount}</span>
         </div>
