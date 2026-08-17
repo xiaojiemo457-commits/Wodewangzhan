@@ -53,6 +53,7 @@ import {
   getAbout,
   updateAbout,
 } from './aboutService.js';
+import { HOT_SOURCES } from './hotSources.js';
 
 // 读取请求体并解析为 JSON（限制 512KB，防止超大请求体 DoS）
 const MAX_BODY = 512 * 1024;
@@ -126,20 +127,20 @@ async function fetch60s() {
 }
 
 // ===== 全平台热榜 =====
-// 数据源：本地自部署 DailyHotApi + 60s API（补小红书/抖音）
+// 数据源：主站内置抓取（移植自 DailyHotApi）+ 60s API（补小红书/抖音）
 // 缓存 10 分钟（热榜更新频繁）
-// DHA_BASE：本地默认 http://127.0.0.1:6688；云端部署时通过环境变量指向远程 DailyHotApi 实例
+// DHA_BASE：仅在配置了远程 DailyHotApi 实例时使用（云端部署无需）
 const HOT_PLATFORMS = {
   // 小红书/抖音（60s API，DailyHotApi 无小红书路由；抖音用 60s 更稳定）
   rednote: { name: '小红书', group: '小红书', source: 's60' },
   douyin: { name: '抖音', group: '其他', source: 's60' },
-  // 其余平台
-  bilibili: { name: 'B站', group: '其他', source: 'dha' },
-  kuaishou: { name: '快手', group: '其他', source: 'dha' },
-  baidu: { name: '百度', group: '其他', source: 'dha' },
-  toutiao: { name: '头条', group: '其他', source: 'dha' },
-  'qq-news': { name: '腾讯新闻', group: '其他', source: 'dha' },
-  history: { name: '历史上的今天', group: '其他', source: 'dha' },
+  // 其余平台（主站内置抓取）
+  bilibili: { name: 'B站', group: '其他', source: 'builtin' },
+  kuaishou: { name: '快手', group: '其他', source: 'builtin' },
+  baidu: { name: '百度', group: '其他', source: 'builtin' },
+  toutiao: { name: '头条', group: '其他', source: 'builtin' },
+  'qq-news': { name: '腾讯新闻', group: '其他', source: 'builtin' },
+  history: { name: '历史上的今天', group: '其他', source: 'builtin' },
 };
 const hotCache = new Map(); // platform -> { data, at }
 const HOT_CACHE_TTL = 10 * 60 * 1000;
@@ -164,7 +165,7 @@ async function fetchHotBoard(platform) {
   let items = [];
   let updatedAt = now;
   if (def.source === 's60') {
-    // 60s API（小红书）
+    // 60s API（小红书/抖音）
     const res = await fetch(`https://60s.viki.moe/v2/${platform}`, {
       headers: {
         'User-Agent': 'new-site/1.0 (https://github.com/vikiboss/60s)',
@@ -175,8 +176,11 @@ async function fetchHotBoard(platform) {
     if (!res.ok) throw new Error(`60s API error: ${res.status}`);
     const json = await res.json();
     items = (Array.isArray(json.data) ? json.data : []).map(normalizeHotItem);
+  } else if (def.source === 'builtin') {
+    // 主站内置抓取（移植自 DailyHotApi，云端/本地均可用）
+    items = await HOT_SOURCES[platform]();
   } else {
-    // 本地 DailyHotApi 实例
+    // 远程 DailyHotApi 实例（DHA_BASE 环境变量配置时使用）
     const res = await fetch(`${DHA_BASE}/${platform}?limit=30`, {
       signal: AbortSignal.timeout(15000),
     });
