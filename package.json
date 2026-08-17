@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:server": "node server/index.js",
     "dev:all": "concurrently \"npm run dev:server\" \"npm run dev\"",
+    "start": "node server/index.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -14,6 +15,9 @@
     "test:watch": "vitest",
     "test:features": "node scripts/test-all-features.mjs",
     "check": "tsc -b --noEmit"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -121,9 +121,33 @@ npm run build
 
 ## 部署
 
+### 方式一：Zeabur / Railway 等 PaaS 平台（推荐，无需自备服务器）
+
+本项目支持 `PORT` 与 `DHA_BASE` 环境变量，可直接部署到 Zeabur / Railway / Render 等平台：
+
+1. 将代码推送到 GitHub（仓库已就绪）。
+2. 注册并登录 [Zeabur](https://zeabur.com)，授权 GitHub。
+3. 导入 `Wodewangzhan` 仓库，平台会自动识别 Node 项目。
+4. 设置构建与启动命令：
+   - **Build**：`npm run build`
+   - **Start**：`npm start`（即 `node server/index.js`，自动读取平台注入的 `PORT`）
+5. 设置环境变量（Variables）：
+   - `ADMIN_PASSWORD`：后台管理员密码（不设置则首次启动会打印随机密码到日志）
+   - `DHA_BASE`：热榜数据源地址（见下方说明）
+6. 部署完成后，访问平台分配的域名即可。
+
+> **热榜数据源（DHA_BASE）说明**：
+> 全平台热榜依赖 [DailyHotApi](https://github.com/imsyy/DailyHotApi)。本地开发默认指向
+> `http://127.0.0.1:6688`；云端部署时，建议在 Zeabur 上**再导入并部署 DailyHotApi 仓库**，
+> 然后把它的访问地址（如 `https://xxx.zeabur.app`）填入主站的环境变量 `DHA_BASE`。
+> 不配置该变量时，热榜接口会返回空数据（小红书/抖音由 60s API 提供，不受影响）。
+
+### 方式二：自有服务器
+
 1. 执行 `npm run build` 生成 `dist/`。
-2. 启动 `node server/index.js` 提供静态文件服务并代理 `/api/`。
-3. 如需热榜功能，确保 DailyHotApi（6688）已启动。
+2. 安装 Node.js ≥ 18，执行 `npm start`（或 `node server/index.js`）提供静态文件服务并代理 `/api/`。
+3. 设置 `ADMIN_PASSWORD` 与 `DHA_BASE` 环境变量（同上）。
+4. 建议使用 PM2 守护进程：`pm2 start "npm start" --name wodewangzhan`。
 
 ## 管理员登录
 

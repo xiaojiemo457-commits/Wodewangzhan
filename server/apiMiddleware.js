@@ -126,8 +126,9 @@ async function fetch60s() {
 }
 
 // ===== 全平台热榜 =====
-// 数据源：本地自部署 DailyHotApi（http://127.0.0.1:6688）+ 60s API（补小红书）
+// 数据源：本地自部署 DailyHotApi + 60s API（补小红书/抖音）
 // 缓存 10 分钟（热榜更新频繁）
+// DHA_BASE：本地默认 http://127.0.0.1:6688；云端部署时通过环境变量指向远程 DailyHotApi 实例
 const HOT_PLATFORMS = {
   // 小红书/抖音（60s API，DailyHotApi 无小红书路由；抖音用 60s 更稳定）
   rednote: { name: '小红书', group: '小红书', source: 's60' },
@@ -142,7 +143,7 @@ const HOT_PLATFORMS = {
 };
 const hotCache = new Map(); // platform -> { data, at }
 const HOT_CACHE_TTL = 10 * 60 * 1000;
-const DHA_BASE = 'http://127.0.0.1:6688'; // 本地 DailyHotApi 实例
+const DHA_BASE = process.env.DHA_BASE || 'http://127.0.0.1:6688';
 
 // 归一化榜单条目 -> { title, hot, url, desc }
 function normalizeHotItem(item) {
