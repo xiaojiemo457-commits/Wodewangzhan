@@ -165,16 +165,25 @@ async function fetchHotBoard(platform) {
   let items = [];
   let updatedAt = now;
   if (def.source === 's60') {
-    // 60s API（小红书/抖音）
-    const res = await fetch(`https://60s.viki.moe/v2/${platform}`, {
-      headers: {
-        'User-Agent': 'new-site/1.0 (https://github.com/vikiboss/60s)',
-        Accept: 'application/json',
-      },
-      signal: AbortSignal.timeout(12000),
-    });
-    if (!res.ok) throw new Error(`60s API error: ${res.status}`);
-    const json = await res.json();
+    // 60s API（小红书/抖音）——限流较严，失败后重试 2 次
+    let json = null;
+    for (let attempt = 1; attempt <= 3 && !json; attempt++) {
+      try {
+        const res = await fetch(`https://60s.viki.moe/v2/${platform}`, {
+          headers: {
+            'User-Agent': 'new-site/1.0 (https://github.com/vikiboss/60s)',
+            Accept: 'application/json',
+          },
+          signal: AbortSignal.timeout(12000),
+        });
+        if (!res.ok) throw new Error(`60s API error: ${res.status}`);
+        json = await res.json();
+      } catch (e) {
+        if (attempt === 3) throw e;
+        console.warn(`[api/hot/${platform}] 60s API 第${attempt}次失败: ${e.message}, 重试中...`);
+        await new Promise((r) => setTimeout(r, 800 * attempt));
+      }
+    }
     items = (Array.isArray(json.data) ? json.data : []).map(normalizeHotItem);
   } else if (def.source === 'builtin') {
     // 主站内置抓取（移植自 DailyHotApi，云端/本地均可用）
